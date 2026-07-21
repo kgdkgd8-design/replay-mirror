@@ -366,14 +366,14 @@
     background: var(--panel);
     border: 1px solid var(--line);
     border-radius: 999px;
-    padding: 10px 20px;
+    padding: 14px 32px;
     z-index: 10;
     backdrop-filter: blur(8px);
-    font-weight: 800; font-size: 15px;
+    font-weight: 800; font-size: 28px;
     white-space: nowrap;
   }
   #phaseBadge .dot {
-    width: 12px; height: 12px; border-radius: 50%;
+    width: 18px; height: 18px; border-radius: 50%;
     background: var(--red);
     animation: blink 1s infinite;
     display: none;
@@ -437,6 +437,29 @@
     text-shadow: 0 8px 40px rgba(0,0,0,0.5);
   }
   #cdLabel { font-weight: 700; font-size: 18px; color: var(--text); }
+
+  /* 다음 촬영 준비 카운터 (재생 종료 5초 전, 좌측 하단) */
+  #nextPrep {
+    position: absolute;
+    left: 16px;
+    bottom: calc(max(12px, env(safe-area-inset-bottom)) + 96px);
+    display: none;
+    align-items: center; gap: 16px;
+    background: rgba(11, 15, 26, 0.75);
+    border: 2px solid var(--red);
+    border-radius: 18px;
+    padding: 14px 24px;
+    z-index: 12;
+    backdrop-filter: blur(6px);
+  }
+  #nextPrep.on { display: flex; }
+  #nextPrep .np-label { font-weight: 800; font-size: 24px; color: var(--text); line-height: 1.35; }
+  #nextPrep #npNum {
+    font-weight: 900; font-size: 64px; line-height: 1;
+    color: var(--red);
+    font-variant-numeric: tabular-nums;
+    animation: blink 1s infinite;
+  }
 
   /* 하단 컨트롤 */
   #controls {
@@ -925,6 +948,8 @@
     <div id="cdNum">3</div>
     <div id="cdLabel">잠시 후 슬로우 재생이 시작됩니다</div>
   </div>
+
+  <div id="nextPrep"><span id="npNum">5</span><span class="np-label">다음 촬영<br>준비해주세요</span></div>
 
   <div id="controls">
     <button class="ctrl-btn" id="pauseBtn">
@@ -1725,7 +1750,7 @@
     let elapsed = 0, prev = performance.now();
 
     return new Promise(resolve => {
-      function finish() { playVideo.pause(); resolve(); }
+      function finish() { playVideo.pause(); $('nextPrep').classList.remove('on'); resolve(); }
       function loop(now) {
         if (!running) return finish();
         if (paused) { prev = now; requestAnimationFrame(loop); return; }
@@ -1738,8 +1763,13 @@
           ctx.fillRect(0, 0, mainW, H);
           drawContain(playVideo, playVideo.videoWidth, playVideo.videoHeight, 0, 0, mainW, H);
         }
-        const remain = Math.ceil((playDurMs - elapsed) / 1000);
+        const remainMs = playDurMs - elapsed;
+        const remain = Math.ceil(remainMs / 1000);
         setPhaseUI('play', remain + '초');
+        if (remainMs <= 5000) {
+          $('nextPrep').classList.add('on');
+          $('npNum').textContent = remain;
+        }
         setProgress(elapsed / playDurMs, false);
         requestAnimationFrame(loop);
       }
