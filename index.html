@@ -438,7 +438,7 @@
   }
   #cdLabel { font-weight: 700; font-size: 18px; color: var(--text); }
 
-  /* 다음 촬영 준비 카운터 (재생 종료 5초 전, 좌측 하단) */
+  /* 다음 촬영 준비 카운터 (재생 종료 5초 전, 좌측 하단 PIP 위) */
   #nextPrep {
     position: absolute;
     left: 16px;
@@ -922,9 +922,9 @@
     <div class="setup-row">
       <div class="setup-head">
         <span class="setup-label">우측 화면 담기 방식</span>
-        <span class="setup-val" id="modeVal">수동 (번호 버튼)</span>
+        <span class="setup-val" id="modeVal">자동 (1→4 순환)</span>
       </div>
-      <input type="range" id="modeSlider" min="1" max="2" step="1" value="1">
+      <input type="range" id="modeSlider" min="1" max="2" step="1" value="2">
     </div>
   </div>
 
@@ -1026,7 +1026,7 @@
   </div>
 
   <!-- 우하단 번호 배정 버튼 -->
-  <div id="assignBar">
+  <div id="assignBar" style="display:none;">
     <div class="assign-label">방금 영상 담기</div>
     <div class="assign-btns">
       <button class="assign-btn">1</button>
@@ -1083,9 +1083,9 @@
     <div class="setup-row">
       <div class="setup-head">
         <span class="setup-label">우측 화면 담기 방식</span>
-        <span class="setup-val" id="modeVal2">수동 (번호 버튼)</span>
+        <span class="setup-val" id="modeVal2">자동 (1→4 순환)</span>
       </div>
-      <input type="range" id="modeSlider2" min="1" max="2" step="1" value="1">
+      <input type="range" id="modeSlider2" min="1" max="2" step="1" value="2">
     </div>
     <div class="setup-note">변경한 설정은 다음 촬영부터 적용됩니다</div>
     <button id="closeSettings">닫기</button>
@@ -1153,7 +1153,7 @@
         <div class="help-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="2" y="4" width="14" height="16" rx="2"/><rect x="18" y="4" width="4" height="16" rx="1"/></svg></div>
         <div class="help-body">
           <b>큰 화면 (왼쪽)</b>
-          <span>지금 촬영 중인 모습, 또는 방금 찍은 동작의 슬로우 재생이 나옵니다. 위쪽 뱃지에서 현재 상태(촬영 중 / 슬로우 재생)와 남은 시간을 확인할 수 있고, 맨 위 진행 바(촬영은 빨강, 재생은 노랑)로도 진행 정도가 보입니다.</span>
+          <span>지금 촬영 중인 모습, 또는 방금 찍은 동작의 슬로우 재생이 나옵니다. 슬로우 재생 중에는 좌하단 작은 창에 실시간 카메라("지금" 표시)가 함께 나와서, 화면 앞으로 걸어오는 자기 모습과 방금 동작을 동시에 볼 수 있습니다. 위쪽 뱃지에서 현재 상태와 남은 시간, 맨 위 진행 바(촬영은 빨강, 재생은 노랑)로 진행 정도가 보입니다.</span>
         </div>
       </div>
       <div class="help-item">
@@ -1339,7 +1339,7 @@
   // 각 슬롯: { clips: [{blob, url, ext}] 최신이 앞, pinned: clip|null, cur: 재생 중 인덱스 }
   const slots = Array.from({ length: SLOT_COUNT }, () => ({ clips: [], pinned: null, cur: 0 }));
   let pending = null;    // 방금 재생 끝난 클립 { blob, ext } — 번호 버튼으로 슬롯에 담기 전
-  let assignMode = 1;    // 1: 수동(번호 버튼) / 2: 자동(1→4 순환 담기)
+  let assignMode = 2;    // 1: 수동(번호 버튼) / 2: 자동(1→4 순환 담기) — 기본: 자동
   let autoIdx = 0;       // 자동 모드에서 다음에 담을 슬롯 번호
   let slotsOn = false;   // 우측 패널 표시 여부 (첫 배정 시 켜짐)
   let slotVideos = [];   // <video> 요소 캐시
@@ -1632,6 +1632,56 @@
     ctx.restore();
   }
 
+  // 슬로우 재생 중 좌하단 실시간 카메라 (PIP)
+  function drawLivePip(mainW, H) {
+    if (video.readyState < 2) return;
+    const dpr = devicePixelRatio || 1;
+    const vw = video.videoWidth, vh = video.videoHeight;
+    const pw = Math.round(mainW * 0.26);              // 메인 폭의 26%
+    const ph = Math.round(pw * vh / vw);
+    const margin = 14 * dpr;
+    const x = margin, y = H - ph - margin;
+
+    // 배경 + 테두리
+    ctx.save();
+    ctx.fillStyle = 'rgba(11,15,26,0.9)';
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+    ctx.lineWidth = 2 * dpr;
+    if (ctx.roundRect) {
+      ctx.beginPath();
+      ctx.roundRect(x - 3 * dpr, y - 3 * dpr, pw + 6 * dpr, ph + 6 * dpr, 10 * dpr);
+      ctx.fill(); ctx.stroke();
+    } else {
+      ctx.fillRect(x - 3 * dpr, y - 3 * dpr, pw + 6 * dpr, ph + 6 * dpr);
+      ctx.strokeRect(x - 3 * dpr, y - 3 * dpr, pw + 6 * dpr, ph + 6 * dpr);
+    }
+    ctx.restore();
+
+    drawContain(video, vw, vh, x, y, pw, ph);
+
+    // 준비 카운터를 PIP 바로 위로 배치 (겹침 방지)
+    $('nextPrep').style.bottom = ((H - y) / dpr + 12) + 'px';
+
+    // LIVE 뱃지
+    const bw = 52 * dpr, bh = 20 * dpr;
+    ctx.save();
+    ctx.fillStyle = 'rgba(11,15,26,0.8)';
+    if (ctx.roundRect) {
+      ctx.beginPath();
+      ctx.roundRect(x + 6 * dpr, y + 6 * dpr, bw, bh, 10 * dpr);
+      ctx.fill();
+    } else ctx.fillRect(x + 6 * dpr, y + 6 * dpr, bw, bh);
+    ctx.fillStyle = '#E5484D';
+    ctx.beginPath();
+    ctx.arc(x + 15 * dpr, y + 6 * dpr + bh / 2, 4 * dpr, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#F5F7FC';
+    ctx.font = `800 ${10.5 * dpr}px SUIT, sans-serif`;
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText('지금', x + 23 * dpr, y + 6 * dpr + bh / 2 + dpr);
+    ctx.restore();
+  }
+
   // 라이브 프리뷰 그리기 (촬영/대기 중)
   function drawLive() {
     if (video.readyState < 2) return;
@@ -1762,6 +1812,7 @@
           ctx.fillStyle = '#000';
           ctx.fillRect(0, 0, mainW, H);
           drawContain(playVideo, playVideo.videoWidth, playVideo.videoHeight, 0, 0, mainW, H);
+          drawLivePip(mainW, H);   // 좌하단 실시간 카메라
         }
         const remainMs = playDurMs - elapsed;
         const remain = Math.ceil(remainMs / 1000);
