@@ -902,61 +902,90 @@
     color: var(--text-dim);
   }
   .err-card b { color: var(--text); font-size: 18px; display: block; margin-bottom: 10px; }
+
+  /* ===== 언어 전환 ===== */
+  html.en .ko { display: none !important; }
+  html:not(.en) .en { display: none !important; }
+  #langBtn {
+    position: fixed;
+    top: max(14px, env(safe-area-inset-top)); right: 14px;
+    z-index: 60;
+    font-family: 'SUIT'; font-weight: 800; font-size: 13px;
+    color: var(--text);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 9px 16px;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+  }
+  html.en body.lite .setup-row.locked .setup-label::after { content: " 🔒 Paid app only"; }
 </style>
+<script>
+(function(){
+  var l;
+  try { l = localStorage.getItem('rm-lang'); } catch(e) {}
+  if (l !== 'ko' && l !== 'en') l = ((navigator.language||'').toLowerCase().indexOf('ko')===0) ? 'ko' : 'en';
+  window.RM_LANG = l;
+  document.documentElement.lang = l;
+  if (l === 'en') document.documentElement.classList.add('en');
+})();
+</script>
 </head>
 <body>
 
 <!-- 시작 화면 -->
 <div id="startScreen">
+  <button id="langBtn">English</button>
   <div class="brand-eyebrow">FOR EVERY ATHLETE</div>
-  <div class="brand-title">리플레이 미러</div>
-  <div class="brand-sub">촬영 → 카운트다운 → 슬로우 재생이<br>자동으로 반복됩니다.</div>
+  <div class="brand-title"><span class="ko">리플레이 미러</span><span class="en">Replay Mirror</span></div>
+  <div class="brand-sub"><span class="ko">촬영 → 카운트다운 → 슬로우 재생이<br>자동으로 반복됩니다.</span><span class="en">Record → countdown → slow replay,<br>repeating automatically.</span></div>
 
   <div class="setup-card">
     <div class="setup-row">
       <div class="setup-head">
-        <span class="setup-label">촬영 시간</span>
+        <span class="setup-label"><span class="ko">촬영 시간</span><span class="en">Recording time</span></span>
         <span class="setup-val" id="recVal">10초</span>
       </div>
       <input type="range" id="recSlider" min="3" max="30" step="1" value="10">
     </div>
     <div class="setup-row">
       <div class="setup-head">
-        <span class="setup-label">대기 카운트</span>
+        <span class="setup-label"><span class="ko">대기 카운트</span><span class="en">Wait countdown</span></span>
         <span class="setup-val" id="waitVal">3초</span>
       </div>
       <input type="range" id="waitSlider" min="0" max="10" step="1" value="3">
     </div>
     <div class="setup-row">
       <div class="setup-head">
-        <span class="setup-label">재생 속도</span>
+        <span class="setup-label"><span class="ko">재생 속도</span><span class="en">Playback speed</span></span>
         <span class="setup-val" id="speedVal">0.5배속</span>
       </div>
       <input type="range" id="speedSlider" min="25" max="100" step="25" value="50">
     </div>
     <div class="setup-row">
       <div class="setup-head">
-        <span class="setup-label">카메라 화질</span>
+        <span class="setup-label"><span class="ko">카메라 화질</span><span class="en">Camera quality</span></span>
         <span class="setup-val" id="qualVal">HD 720p</span>
       </div>
       <input type="range" id="qualSlider" min="1" max="3" step="1" value="2">
     </div>
     <div class="setup-row">
       <div class="setup-head">
-        <span class="setup-label">우측 화면 담기 방식</span>
+        <span class="setup-label"><span class="ko">우측 화면 담기 방식</span><span class="en">Right-panel assign mode</span></span>
         <span class="setup-val" id="modeVal">자동 (1→4 순환)</span>
       </div>
       <input type="range" id="modeSlider" min="1" max="2" step="1" value="2">
     </div>
-    <div class="lite-note">🔒 표시 설정은 유료 앱에서 조절할 수 있습니다<br>무료 웹 버전은 촬영 10초 · 대기 3초 · 0.5배속으로 고정됩니다</div>
+    <div class="lite-note"><span class="ko">🔒 표시 설정은 유료 앱에서 조절할 수 있습니다<br>무료 웹 버전은 촬영 10초 · 대기 3초 · 0.5배속으로 고정됩니다</span><span class="en">🔒 Locked settings can be adjusted in the paid app<br>The free web version is fixed at 10s recording · 3s wait · 0.5x speed</span></div>
   </div>
 
-  <button id="startBtn">시작</button>
-  <div class="start-note">시작을 누르면 카메라 사용 권한을 요청합니다</div>
+  <button id="startBtn"><span class="ko">시작</span><span class="en">Start</span></button>
+  <div class="start-note"><span class="ko">시작을 누르면 카메라 사용 권한을 요청합니다</span><span class="en">Pressing Start will request camera permission</span></div>
   <div style="position:relative; display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
-    <button id="helpLink" class="start-link">사용 설명서</button>
-    <button id="aboutLink" class="start-link">만든 이야기</button>
-    <button id="fbLink" class="start-link">의견 보내기</button>
+    <button id="helpLink" class="start-link"><span class="ko">사용 설명서</span><span class="en">User Guide</span></button>
+    <button id="aboutLink" class="start-link"><span class="ko">만든 이야기</span><span class="en">Our Story</span></button>
+    <button id="fbLink" class="start-link"><span class="ko">의견 보내기</span><span class="en">Feedback</span></button>
   </div>
 </div>
 
@@ -969,62 +998,61 @@
 
   <div id="countdown">
     <div id="cdNum">3</div>
-    <div id="cdLabel">잠시 후 슬로우 재생이 시작됩니다</div>
+    <div id="cdLabel"><span class="ko">잠시 후 슬로우 재생이 시작됩니다</span><span class="en">Slow replay starts in a moment</span></div>
   </div>
 
-  <div id="nextPrep"><span id="npNum">5</span><span class="np-label">다음 촬영<br>준비해주세요</span></div>
+  <div id="nextPrep"><span id="npNum">5</span><span class="np-label"><span class="ko">다음 촬영<br>준비해주세요</span><span class="en">Get ready for<br>the next take</span></span></div>
 
   <div id="controls">
     <button class="ctrl-btn" id="pauseBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
-      일시정지
     </button>
     <button class="ctrl-btn" id="mirrorBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M8 7l-5 5 5 5M16 7l5 5-5 5"/></svg>
-      거울 모드
+      <span class="ko">거울 모드</span><span class="en">Mirror</span>
     </button>
     <button class="ctrl-btn" id="skipBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4l10 8-10 8V4z"/><path d="M19 5v14"/></svg>
-      바로 재생
+      <span class="ko">바로 재생</span><span class="en">Play now</span>
     </button>
     <button class="ctrl-btn" id="settingsBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      시간 설정
+      <span class="ko">시간 설정</span><span class="en">Settings</span>
     </button>
     <button class="ctrl-btn" id="camBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
-      카메라 선택
+      <span class="ko">카메라 선택</span><span class="en">Camera</span>
     </button>
     <button class="ctrl-btn" id="saveBtn" style="opacity:0.4;" disabled>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
-      영상 저장
+      <span class="ko">영상 저장</span><span class="en">Save clip</span>
     </button>
     <button class="ctrl-btn" id="fsBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
-      전체화면
+      <span class="ko">전체화면</span><span class="en">Fullscreen</span>
     </button>
     <button class="ctrl-btn" id="coachBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      코칭
+      <span class="ko">코칭</span><span class="en">Coach note</span>
     </button>
     <button class="ctrl-btn" id="helpBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
-      설명서
+      <span class="ko">설명서</span><span class="en">Guide</span>
     </button>
     <button class="ctrl-btn" id="hideBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-      숨기기
+      <span class="ko">숨기기</span><span class="en">Hide</span>
     </button>
   </div>
 
   <div id="handle"></div>
   <div id="toast"></div>
-  <div id="pausedTag">일시정지</div>
+  <div id="pausedTag"><span class="ko">일시정지</span><span class="en">PAUSED</span></div>
   <div id="coachText"></div>
 
   <!-- 코칭 문구 입력 -->
   <div id="coachPanel">
-    <div class="cam-panel-title">코칭 문구</div>
+    <div class="cam-panel-title"><span class="ko">코칭 문구</span><span class="en">Coaching note</span></div>
     <input id="coachInput" type="text" maxlength="40" placeholder="화면에 크게 띄울 문구를 입력하세요">
     <div class="coach-presets">
       <button class="coach-preset">시선은 정면!</button>
@@ -1035,22 +1063,22 @@
       <button class="coach-preset">마지막 자세 3초 유지</button>
     </div>
     <div class="coach-actions">
-      <button id="coachClear">지우기</button>
-      <button id="coachShow">화면에 표시</button>
+      <button id="coachClear"><span class="ko">지우기</span><span class="en">Clear</span></button>
+      <button id="coachShow"><span class="ko">화면에 표시</span><span class="en">Show on screen</span></button>
     </div>
   </div>
 
   <!-- 우측 슬롯 패널 -->
   <div id="slotCol">
-    <div class="slot empty"><video muted playsinline disablepictureinpicture></video><div class="slot-num">1</div><div class="slot-count"></div><div class="slot-pin"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M12 17v5M9 3h6l1 7 2 2H6l2-2 1-7z"/></svg></div><div class="slot-dots"></div><div class="slot-empty-hint"><b>1</b><span>아래 1번 버튼으로<br>영상 담기</span></div></div>
-    <div class="slot empty"><video muted playsinline disablepictureinpicture></video><div class="slot-num">2</div><div class="slot-count"></div><div class="slot-pin"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M12 17v5M9 3h6l1 7 2 2H6l2-2 1-7z"/></svg></div><div class="slot-dots"></div><div class="slot-empty-hint"><b>2</b><span>아래 2번 버튼으로<br>영상 담기</span></div></div>
-    <div class="slot empty"><video muted playsinline disablepictureinpicture></video><div class="slot-num">3</div><div class="slot-count"></div><div class="slot-pin"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M12 17v5M9 3h6l1 7 2 2H6l2-2 1-7z"/></svg></div><div class="slot-dots"></div><div class="slot-empty-hint"><b>3</b><span>아래 3번 버튼으로<br>영상 담기</span></div></div>
-    <div class="slot empty"><video muted playsinline disablepictureinpicture></video><div class="slot-num">4</div><div class="slot-count"></div><div class="slot-pin"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M12 17v5M9 3h6l1 7 2 2H6l2-2 1-7z"/></svg></div><div class="slot-dots"></div><div class="slot-empty-hint"><b>4</b><span>아래 4번 버튼으로<br>영상 담기</span></div></div>
+    <div class="slot empty"><video muted playsinline disablepictureinpicture></video><div class="slot-num">1</div><div class="slot-count"></div><div class="slot-pin"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M12 17v5M9 3h6l1 7 2 2H6l2-2 1-7z"/></svg></div><div class="slot-dots"></div><div class="slot-empty-hint"><b>1</b><span><span class="ko">아래 1번 버튼으로<br>영상 담기</span><span class="en">Add clips with<br>button 1 below</span></span></div></div>
+    <div class="slot empty"><video muted playsinline disablepictureinpicture></video><div class="slot-num">2</div><div class="slot-count"></div><div class="slot-pin"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M12 17v5M9 3h6l1 7 2 2H6l2-2 1-7z"/></svg></div><div class="slot-dots"></div><div class="slot-empty-hint"><b>2</b><span><span class="ko">아래 2번 버튼으로<br>영상 담기</span><span class="en">Add clips with<br>button 2 below</span></span></div></div>
+    <div class="slot empty"><video muted playsinline disablepictureinpicture></video><div class="slot-num">3</div><div class="slot-count"></div><div class="slot-pin"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M12 17v5M9 3h6l1 7 2 2H6l2-2 1-7z"/></svg></div><div class="slot-dots"></div><div class="slot-empty-hint"><b>3</b><span><span class="ko">아래 3번 버튼으로<br>영상 담기</span><span class="en">Add clips with<br>button 3 below</span></span></div></div>
+    <div class="slot empty"><video muted playsinline disablepictureinpicture></video><div class="slot-num">4</div><div class="slot-count"></div><div class="slot-pin"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M12 17v5M9 3h6l1 7 2 2H6l2-2 1-7z"/></svg></div><div class="slot-dots"></div><div class="slot-empty-hint"><b>4</b><span><span class="ko">아래 4번 버튼으로<br>영상 담기</span><span class="en">Add clips with<br>button 4 below</span></span></div></div>
   </div>
 
   <!-- 우하단 번호 배정 버튼 -->
   <div id="assignBar" style="display:none;">
-    <div class="assign-label">방금 영상 담기</div>
+    <div class="assign-label"><span class="ko">방금 영상 담기</span><span class="en">Assign the last clip</span></div>
     <div class="assign-btns">
       <button class="assign-btn">1</button>
       <button class="assign-btn">2</button>
@@ -1063,249 +1091,254 @@
   <div id="slotMenu">
     <div id="slotMenuTitle"></div>
     <div id="slotMenuList" style="display:flex; flex-direction:column; gap:8px;"></div>
-    <button id="slotMenuClose">닫기</button>
+    <button id="slotMenuClose"><span class="ko">닫기</span><span class="en">Close</span></button>
   </div>
 
   <!-- 카메라 선택 패널 -->
   <div id="camPanel">
-    <div class="cam-panel-title">카메라 선택</div>
+    <div class="cam-panel-title"><span class="ko">카메라 선택</span><span class="en">Select camera</span></div>
     <div id="camList" style="display:flex; flex-direction:column; gap:8px;"></div>
-    <button id="closeCam" style="font-family:'SUIT'; font-weight:800; font-size:15px; color:var(--ink); background:var(--yellow); border:none; border-radius:12px; padding:13px; cursor:pointer; margin-top:6px;">닫기</button>
+    <button id="closeCam" style="font-family:'SUIT'; font-weight:800; font-size:15px; color:var(--ink); background:var(--yellow); border:none; border-radius:12px; padding:13px; cursor:pointer; margin-top:6px;"><span class="ko">닫기</span><span class="en">Close</span></button>
   </div>
 
   <!-- 실행 중 설정 패널 -->
   <div id="settingsPanel">
     <div class="setup-row">
       <div class="setup-head">
-        <span class="setup-label">촬영 시간</span>
+        <span class="setup-label"><span class="ko">촬영 시간</span><span class="en">Recording time</span></span>
         <span class="setup-val" id="recVal2">10초</span>
       </div>
       <input type="range" id="recSlider2" min="3" max="30" step="1" value="10">
     </div>
     <div class="setup-row">
       <div class="setup-head">
-        <span class="setup-label">대기 카운트</span>
+        <span class="setup-label"><span class="ko">대기 카운트</span><span class="en">Wait countdown</span></span>
         <span class="setup-val" id="waitVal2">3초</span>
       </div>
       <input type="range" id="waitSlider2" min="0" max="10" step="1" value="3">
     </div>
     <div class="setup-row">
       <div class="setup-head">
-        <span class="setup-label">재생 속도</span>
+        <span class="setup-label"><span class="ko">재생 속도</span><span class="en">Playback speed</span></span>
         <span class="setup-val" id="speedVal2">0.5배속</span>
       </div>
       <input type="range" id="speedSlider2" min="25" max="100" step="25" value="50">
     </div>
     <div class="setup-row">
       <div class="setup-head">
-        <span class="setup-label">카메라 화질</span>
+        <span class="setup-label"><span class="ko">카메라 화질</span><span class="en">Camera quality</span></span>
         <span class="setup-val" id="qualVal2">HD 720p</span>
       </div>
       <input type="range" id="qualSlider2" min="1" max="3" step="1" value="2">
     </div>
     <div class="setup-row">
       <div class="setup-head">
-        <span class="setup-label">우측 화면 담기 방식</span>
+        <span class="setup-label"><span class="ko">우측 화면 담기 방식</span><span class="en">Right-panel assign mode</span></span>
         <span class="setup-val" id="modeVal2">자동 (1→4 순환)</span>
       </div>
       <input type="range" id="modeSlider2" min="1" max="2" step="1" value="2">
     </div>
-    <div class="setup-note">변경한 설정은 다음 촬영부터 적용됩니다</div>
-    <div class="lite-note">🔒 표시 설정은 유료 앱에서 조절할 수 있습니다</div>
-    <button id="closeSettings">닫기</button>
+    <div class="setup-note"><span class="ko">변경한 설정은 다음 촬영부터 적용됩니다</span><span class="en">Changes apply from the next recording</span></div>
+    <div class="lite-note"><span class="ko">🔒 표시 설정은 유료 앱에서 조절할 수 있습니다</span><span class="en">🔒 Locked settings can be adjusted in the paid app</span></div>
+    <button id="closeSettings"><span class="ko">닫기</span><span class="en">Close</span></button>
   </div>
 </div>
 
 <!-- 설명서 -->
 <div id="helpOverlay">
   <div class="help-wrap">
-    <div class="help-title">사용 설명서</div>
-    <div class="help-sub">Replay Mirror — 버튼을 누르지 않아도 자동으로 반복되는, 흐름을 끊지 않는 거울</div>
+    <div class="help-title"><span class="ko">사용 설명서</span><span class="en">User Guide</span></div>
+    <div class="help-sub"><span class="ko">Replay Mirror — 버튼을 누르지 않아도 자동으로 반복되는, 흐름을 끊지 않는 거울</span><span class="en">Replay Mirror — a mirror that repeats on its own, never breaking the flow of practice</span></div>
 
     <div class="help-section">
-      <div class="help-head">기본 흐름</div>
+      <div class="help-head"><span class="ko">기본 흐름</span><span class="en">How it works</span></div>
       <div class="cycle">
         <div class="cycle-step">
           <div class="icon">🔴</div>
-          <b>촬영</b>
-          <span>카메라 앞에서<br>동작을 합니다</span>
+          <b><span class="ko">촬영</span><span class="en">Record</span></b>
+          <span><span class="ko">카메라 앞에서<br>동작을 합니다</span><span class="en">Perform your move<br>in front of the camera</span></span>
         </div>
         <div class="cycle-arrow">→</div>
         <div class="cycle-step">
           <div class="icon">3</div>
-          <b>카운트</b>
-          <span>화면 앞으로<br>이동하는 시간</span>
+          <b><span class="ko">카운트</span><span class="en">Count</span></b>
+          <span><span class="ko">화면 앞으로<br>이동하는 시간</span><span class="en">Time to walk up<br>to the screen</span></span>
         </div>
         <div class="cycle-arrow">→</div>
         <div class="cycle-step">
           <div class="icon">▶</div>
-          <b>슬로우 재생</b>
-          <span>방금 한 동작이<br>천천히 나옵니다</span>
+          <b><span class="ko">슬로우 재생</span><span class="en">Slow replay</span></b>
+          <span><span class="ko">방금 한 동작이<br>천천히 나옵니다</span><span class="en">Your last attempt<br>plays back in slow motion</span></span>
         </div>
       </div>
-      <div class="cycle-loop">↻ 재생이 끝나면 자동으로 다시 촬영이 시작됩니다</div>
+      <div class="cycle-loop"><span class="ko">↻ 재생이 끝나면 자동으로 다시 촬영이 시작됩니다</span><span class="en">↻ When the replay ends, recording starts again automatically</span></div>
     </div>
 
     <div class="help-section">
-      <div class="help-head">시작 전 설정</div>
+      <div class="help-head"><span class="ko">시작 전 설정</span><span class="en">Settings before you start</span></div>
       <div class="help-item">
         <div class="help-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
         <div class="help-body">
-          <b>촬영 시간 · 대기 카운트 · 재생 속도</b>
-          <span>촬영 시간(3~30초)은 한 사이클에 찍는 길이, 대기 카운트(0~10초)는 촬영 후 화면 앞으로 걸어올 시간, 재생 속도(0.25~1배속)는 슬로우 정도입니다. 0.5배속이면 10초 영상이 20초 동안 천천히 나옵니다.</span>
+          <b><span class="ko">촬영 시간 · 대기 카운트 · 재생 속도</span><span class="en">Recording time · wait countdown · playback speed</span></b>
+          <span><span class="ko">촬영 시간(3~30초)은 한 사이클에 찍는 길이, 대기 카운트(0~10초)는 촬영 후 화면 앞으로 걸어올 시간, 재생 속도(0.25~1배속)는 슬로우 정도입니다. 0.5배속이면 10초 영상이 20초 동안 천천히 나옵니다.</span><span class="en">Recording time (3–30s) is the length of each take. Wait countdown (0–10s) gives you time to walk up to the screen after recording. Playback speed (0.25–1x) sets how slow the replay is — at 0.5x, a 10-second clip plays for 20 seconds.</span></span>
         </div>
       </div>
       <div class="help-item">
         <div class="help-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
         <div class="help-body">
-          <b>카메라 화질</b>
-          <span>SD 480p(가장 가벼움) / HD 720p(기본, 권장) / FHD 1080p(가장 선명, 저장 영상 품질도 올라감). 오래 켜두는 태블릿은 720p, 저장해서 공유할 영상이 중요할 때는 1080p를 추천합니다.</span>
+          <b><span class="ko">카메라 화질</span><span class="en">Camera quality</span></b>
+          <span><span class="ko">SD 480p(가장 가벼움) / HD 720p(기본, 권장) / FHD 1080p(가장 선명, 저장 영상 품질도 올라감). 오래 켜두는 태블릿은 720p, 저장해서 공유할 영상이 중요할 때는 1080p를 추천합니다.</span><span class="en">SD 480p (lightest) / HD 720p (default, recommended) / FHD 1080p (sharpest — saved clips look better too). For tablets running all day use 720p; choose 1080p when saved clips matter.</span></span>
         </div>
       </div>
       <div class="help-item">
         <div class="help-icon yellow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="15" y="3" width="7" height="4" rx="1"/><rect x="15" y="10" width="7" height="4" rx="1"/><rect x="15" y="17" width="7" height="4" rx="1"/><rect x="2" y="3" width="10" height="18" rx="2"/></svg></div>
         <div class="help-body">
-          <b>우측 화면 담기 방식</b>
-          <span>수동(번호 버튼): 촬영이 끝나면 우하단 1~4 버튼이 깜빡이고, 누른 영상만 그 번호 칸에 들어갑니다. 칸마다 최대 5개까지 쌓입니다. 자동(1→4 순환): 버튼 없이 매 촬영이 1→2→3→4 순서로 자동으로 담기고, 각 칸에는 최신 영상 하나만 남아 계속 교체됩니다. 모든 설정은 실행 중에도 "시간 설정" 버튼으로 바꿀 수 있고, 다음 촬영부터 적용됩니다.</span>
+          <b><span class="ko">우측 화면 담기 방식</span><span class="en">Right-panel assign mode</span></b>
+          <span><span class="ko">수동(번호 버튼): 촬영이 끝나면 우하단 1~4 버튼이 깜빡이고, 누른 영상만 그 번호 칸에 들어갑니다. 칸마다 최대 5개까지 쌓입니다. 자동(1→4 순환): 버튼 없이 매 촬영이 1→2→3→4 순서로 자동으로 담기고, 각 칸에는 최신 영상 하나만 남아 계속 교체됩니다. 모든 설정은 실행 중에도 "시간 설정" 버튼으로 바꿀 수 있고, 다음 촬영부터 적용됩니다.</span><span class="en">Manual (number buttons): when a recording ends, buttons 1–4 blink at the bottom right, and only the clips you assign go into that numbered slot — up to 5 per slot. Auto (1→4 rotation): every recording is assigned to slots 1→2→3→4 in order without any buttons, keeping only the latest clip per slot. All settings can also be changed while running via the Settings button, applying from the next recording.</span></span>
         </div>
       </div>
     </div>
 
     <div class="help-section">
-      <div class="help-head">화면 보는 법</div>
+      <div class="help-head"><span class="ko">화면 보는 법</span><span class="en">Reading the screen</span></div>
       <div class="help-item">
         <div class="help-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="2" y="4" width="14" height="16" rx="2"/><rect x="18" y="4" width="4" height="16" rx="1"/></svg></div>
         <div class="help-body">
-          <b>큰 화면 (왼쪽)</b>
-          <span>지금 촬영 중인 모습, 또는 방금 찍은 동작의 슬로우 재생이 나옵니다. 슬로우 재생 중에는 좌하단 작은 창에 실시간 카메라("지금" 표시)가 함께 나와서, 화면 앞으로 걸어오는 자기 모습과 방금 동작을 동시에 볼 수 있습니다. 위쪽 뱃지에서 현재 상태와 남은 시간, 맨 위 진행 바(촬영은 빨강, 재생은 노랑)로 진행 정도가 보입니다.</span>
+          <b><span class="ko">큰 화면 (왼쪽)</span><span class="en">Main screen (left)</span></b>
+          <span><span class="ko">지금 촬영 중인 모습, 또는 방금 찍은 동작의 슬로우 재생이 나옵니다. 슬로우 재생 중에는 좌하단 작은 창에 실시간 카메라("지금" 표시)가 함께 나와서, 화면 앞으로 걸어오는 자기 모습과 방금 동작을 동시에 볼 수 있습니다. 위쪽 뱃지에서 현재 상태와 남은 시간, 맨 위 진행 바(촬영은 빨강, 재생은 노랑)로 진행 정도가 보입니다.</span><span class="en">Shows the live camera while recording, or the slow replay of your last attempt. During the replay, a small window at the bottom left shows the live camera (marked LIVE), so you can watch yourself walking up while the replay plays. The badge on top shows the current phase and remaining time, and the bar at the very top shows progress (red = recording, yellow = replay).</span></span>
         </div>
       </div>
       <div class="help-item">
         <div class="help-icon yellow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg></div>
         <div class="help-body">
-          <b>1·2·3·4 담기 버튼 (우하단, 수동 모드)</b>
-          <span>촬영이 끝나는 순간부터 버튼이 노란색으로 깜빡입니다. 카운트다운 중이든 슬로우 재생 중이든 원하는 번호를 누르면 그 영상이 오른쪽 해당 칸으로 들어갑니다. 안 누르면 다음 촬영 때 새 영상으로 바뀝니다. 학생별로 번호를 정해두면 각자 자기 칸이 생깁니다.</span>
+          <b><span class="ko">1·2·3·4 담기 버튼 (우하단, 수동 모드)</span><span class="en">Assign buttons 1–4 (bottom right, manual mode)</span></b>
+          <span><span class="ko">촬영이 끝나는 순간부터 버튼이 노란색으로 깜빡입니다. 카운트다운 중이든 슬로우 재생 중이든 원하는 번호를 누르면 그 영상이 오른쪽 해당 칸으로 들어갑니다. 안 누르면 다음 촬영 때 새 영상으로 바뀝니다. 학생별로 번호를 정해두면 각자 자기 칸이 생깁니다.</span><span class="en">They blink yellow the moment a recording ends. Press a number during the countdown or the replay to send that clip to the matching slot on the right. If you press nothing, the next recording replaces it. Give each student a number and everyone gets their own slot.</span></span>
         </div>
       </div>
       <div class="help-item">
         <div class="help-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="15" y="3" width="7" height="4" rx="1"/><rect x="15" y="10" width="7" height="4" rx="1"/><rect x="15" y="17" width="7" height="4" rx="1"/><rect x="2" y="3" width="10" height="18" rx="2"/></svg></div>
         <div class="help-body">
-          <b>작은 화면 4칸 (오른쪽)</b>
-          <span>담긴 영상들이 슬로우로 계속 반복 재생됩니다. 수동 모드에서는 칸마다 최대 5개까지 쌓이고(우상단 3/5 표시), 여러 개면 순서대로 돌아가며 재생됩니다. 6번째가 들어오면 가장 오래된 것이 지워집니다. 자동 모드에서는 각 칸에 최신 영상 하나만 나옵니다.</span>
+          <b><span class="ko">작은 화면 4칸 (오른쪽)</span><span class="en">The four slots (right)</span></b>
+          <span><span class="ko">담긴 영상들이 슬로우로 계속 반복 재생됩니다. 수동 모드에서는 칸마다 최대 5개까지 쌓이고(우상단 3/5 표시), 여러 개면 순서대로 돌아가며 재생됩니다. 6번째가 들어오면 가장 오래된 것이 지워집니다. 자동 모드에서는 각 칸에 최신 영상 하나만 나옵니다.</span><span class="en">Assigned clips loop in slow motion. In manual mode each slot holds up to 5 clips (shown as 3/5 at the top right) and plays them in turn; when a 6th arrives, the oldest is removed. In auto mode each slot shows only the latest clip.</span></span>
         </div>
       </div>
       <div class="help-item">
         <div class="help-icon yellow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M3 12h18"/><path d="M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></div>
         <div class="help-body">
-          <b>칸 스와이프 = 영상 넘겨보기 + 고정</b>
-          <span>영상이 여러 개 쌓인 칸은 아래에 점(●)으로 위치가 표시됩니다. 칸을 좌우로 밀면 이전·다음 영상으로 넘어가고, 넘겨본 영상은 자동으로 고정되어 그것만 반복 재생됩니다(우하단 노란 핀 표시).</span>
+          <b><span class="ko">칸 스와이프 = 영상 넘겨보기 + 고정</span><span class="en">Swipe a slot = browse + pin</span></b>
+          <span><span class="ko">영상이 여러 개 쌓인 칸은 아래에 점(●)으로 위치가 표시됩니다. 칸을 좌우로 밀면 이전·다음 영상으로 넘어가고, 넘겨본 영상은 자동으로 고정되어 그것만 반복 재생됩니다(우하단 노란 핀 표시).</span><span class="en">Slots holding several clips show dots (●) at the bottom. Swipe left or right to move between clips; the clip you swipe to is pinned automatically and loops alone (yellow pin at the bottom right).</span></span>
         </div>
       </div>
       <div class="help-item">
         <div class="help-icon yellow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 17v5M9 3h6l1 7 2 2H6l2-2 1-7z"/></svg></div>
         <div class="help-body">
-          <b>칸을 짧게 탭 = 영상 목록 (고정 해제 · 저장)</b>
-          <span>칸을 탭하면 그 칸의 영상 목록이 열립니다. "고정"으로 원하는 영상만 반복시키거나 "고정 중"을 다시 눌러 해제(전체 순환 복귀)할 수 있고, "저장"을 누르면 그 영상이 원본 화질 동영상 파일로 기기에 저장됩니다. 파일명에 날짜·시간이 자동으로 붙습니다.</span>
+          <b><span class="ko">칸을 짧게 탭 = 영상 목록 (고정 해제 · 저장)</span><span class="en">Tap a slot = clip list (unpin · save)</span></b>
+          <span><span class="ko">칸을 탭하면 그 칸의 영상 목록이 열립니다. "고정"으로 원하는 영상만 반복시키거나 "고정 중"을 다시 눌러 해제(전체 순환 복귀)할 수 있고, "저장"을 누르면 그 영상이 원본 화질 동영상 파일로 기기에 저장됩니다. 파일명에 날짜·시간이 자동으로 붙습니다.</span><span class="en">Tap a slot to open its clip list. Use "Pin" to loop one clip only, tap "Pinned" again to release it (back to cycling all clips), or press "Save" to download that clip as a full-quality video file. The filename automatically includes the date and time.</span></span>
         </div>
       </div>
     </div>
 
     <div class="help-section">
-      <div class="help-head">아래 버튼 안내</div>
+      <div class="help-head"><span class="ko">아래 버튼 안내</span><span class="en">Bottom buttons</span></div>
       <div class="help-item">
         <div class="help-icon yellow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></div>
         <div class="help-body">
-          <b>일시정지</b>
-          <span>모든 화면과 시간이 그 자리에서 즉시 멈춥니다. 자세를 짚어줄 때 유용합니다. 다시 누르면 멈춘 지점부터 이어집니다. 큰 화면을 빠르게 두 번 탭해도 됩니다.</span>
+          <b><span class="ko">일시정지</span><span class="en">Pause</span></b>
+          <span><span class="ko">모든 화면과 시간이 그 자리에서 즉시 멈춥니다. 자세를 짚어줄 때 유용합니다. 다시 누르면 멈춘 지점부터 이어집니다. 큰 화면을 빠르게 두 번 탭해도 됩니다.</span><span class="en">Everything freezes on the spot — every screen and every timer. Great for pointing out details in a pose. Press again to continue from where it stopped. Double-tapping the main screen also works.</span></span>
         </div>
       </div>
       <div class="help-item">
         <div class="help-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 3v18M8 7l-5 5 5 5M16 7l5 5-5 5"/></svg></div>
         <div class="help-body">
-          <b>거울 모드</b>
-          <span>화면이 거울처럼 좌우 반전됩니다. 품새 연습할 때 켜두면 실제 거울 보듯 자연스럽습니다. 오른쪽 작은 화면에도 함께 적용됩니다.</span>
+          <b><span class="ko">거울 모드</span><span class="en">Mirror</span></b>
+          <span><span class="ko">화면이 거울처럼 좌우 반전됩니다. 품새 연습할 때 켜두면 실제 거울 보듯 자연스럽습니다. 오른쪽 작은 화면에도 함께 적용됩니다.</span><span class="en">Flips the screen horizontally like a real mirror — natural for poomsae practice. It also applies to the slots on the right.</span></span>
         </div>
       </div>
       <div class="help-item">
         <div class="help-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 4l10 8-10 8V4z"/><path d="M19 5v14"/></svg></div>
         <div class="help-body">
-          <b>바로 재생</b>
-          <span>동작을 일찍 끝냈으면 촬영 시간이 남아도 이 버튼으로 바로 재생 단계로 넘어갈 수 있습니다.</span>
+          <b><span class="ko">바로 재생</span><span class="en">Play now</span></b>
+          <span><span class="ko">동작을 일찍 끝냈으면 촬영 시간이 남아도 이 버튼으로 바로 재생 단계로 넘어갈 수 있습니다.</span><span class="en">Finished your move early? Skip the remaining recording time and jump straight to the replay.</span></span>
         </div>
       </div>
       <div class="help-item">
         <div class="help-icon yellow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
         <div class="help-body">
-          <b>코칭</b>
-          <span>화면 상단에 크게 띄울 문구를 입력합니다. "시선은 정면!" 같은 교정 포인트를 띄워두면 학생이 촬영·재생 내내 볼 수 있습니다. 자주 쓰는 문구 버튼으로 바로 선택할 수도 있고, "지우기"로 내립니다.</span>
+          <b><span class="ko">코칭</span><span class="en">Coach note</span></b>
+          <span><span class="ko">화면 상단에 크게 띄울 문구를 입력합니다. "시선은 정면!" 같은 교정 포인트를 띄워두면 학생이 촬영·재생 내내 볼 수 있습니다. 자주 쓰는 문구 버튼으로 바로 선택할 수도 있고, "지우기"로 내립니다.</span><span class="en">Displays a large phrase at the top of the screen. Put up a correction point like "Eyes forward!" and students see it throughout recording and replay. Pick a frequent phrase with one tap, or remove it with "Clear".</span></span>
         </div>
       </div>
       <div class="help-item">
         <div class="help-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.2 4.2l2.8 2.8M17 17l2.8 2.8M1 12h4M19 12h4M4.2 19.8L7 17M17 7l2.8-2.8"/></svg></div>
         <div class="help-body">
-          <b>시간 설정</b>
-          <span>촬영 시간, 대기 카운트, 재생 속도, 카메라 화질, 담기 방식을 실행 중에 바꿉니다. 변경한 값은 다음 촬영부터 적용됩니다. 재생 속도는 오른쪽 작은 화면에는 즉시 반영됩니다.</span>
+          <b><span class="ko">시간 설정</span><span class="en">Settings</span></b>
+          <span><span class="ko">촬영 시간, 대기 카운트, 재생 속도, 카메라 화질, 담기 방식을 실행 중에 바꿉니다. 변경한 값은 다음 촬영부터 적용됩니다. 재생 속도는 오른쪽 작은 화면에는 즉시 반영됩니다.</span><span class="en">Change recording time, wait countdown, playback speed, camera quality and assign mode while running. Changes apply from the next recording; playback speed applies to the right-side slots immediately.</span></span>
         </div>
       </div>
       <div class="help-item">
         <div class="help-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
         <div class="help-body">
-          <b>카메라 선택</b>
-          <span>기기에 연결된 카메라 목록(전면·후면·웹캠 등)에서 원하는 카메라를 고를 수 있습니다.</span>
+          <b><span class="ko">카메라 선택</span><span class="en">Camera</span></b>
+          <span><span class="ko">기기에 연결된 카메라 목록(전면·후면·웹캠 등)에서 원하는 카메라를 고를 수 있습니다.</span><span class="en">Choose among the cameras connected to your device (front, rear, webcam and so on).</span></span>
         </div>
       </div>
       <div class="help-item">
         <div class="help-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg></div>
         <div class="help-body">
-          <b>영상 저장</b>
-          <span>가장 최근에 찍힌 영상을 바로 저장하는 빠른 버튼입니다. 이전 영상은 오른쪽 칸을 탭해서 목록에서 저장하세요.</span>
+          <b><span class="ko">영상 저장</span><span class="en">Save clip</span></b>
+          <span><span class="ko">가장 최근에 찍힌 영상을 바로 저장하는 빠른 버튼입니다. 이전 영상은 오른쪽 칸을 탭해서 목록에서 저장하세요.</span><span class="en">A quick button that saves the most recent recording. For earlier clips, tap a slot on the right and save from its list.</span></span>
         </div>
       </div>
       <div class="help-item">
         <div class="help-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></div>
         <div class="help-body">
-          <b>전체화면 / 숨기기</b>
-          <span>전체화면은 화면을 꽉 채우고, 숨기기는 아래 버튼들을 접어서 영상만 보이게 합니다. 하단 가운데 손잡이를 누르면 다시 나타납니다.</span>
+          <b><span class="ko">전체화면 / 숨기기</span><span class="en">Fullscreen / Hide</span></b>
+          <span><span class="ko">전체화면은 화면을 꽉 채우고, 숨기기는 아래 버튼들을 접어서 영상만 보이게 합니다. 하단 가운데 손잡이를 누르면 다시 나타납니다.</span><span class="en">Fullscreen fills the whole display; Hide folds away the bottom buttons so only the video shows. Tap the handle at the bottom center to bring them back.</span></span>
         </div>
       </div>
     </div>
 
     <div class="help-section">
-      <div class="help-head">수업 활용 팁</div>
+      <div class="help-head"><span class="ko">수업 활용 팁</span><span class="en">Tips for class</span></div>
       <div class="help-tip" style="margin-bottom:10px;">
-        <b>수동 모드 — 지도자가 골라 담기.</b> 학생 4명에게 각각 1~4번을 정해줍니다. 시도가 끝날 때마다 잘된 영상만 번호 버튼으로 담으면, 각 칸에 좋은 시도가 최대 5개까지 쌓입니다. 칸을 스와이프해서 1차 시도와 5차 시도를 비교하고, 가장 좋은 동작을 고정해두면 목표 자세가 계속 떠 있게 됩니다.
+        <span class="ko"><b>수동 모드 — 지도자가 골라 담기.</b> 학생 4명에게 각각 1~4번을 정해줍니다. 시도가 끝날 때마다 잘된 영상만 번호 버튼으로 담으면, 각 칸에 좋은 시도가 최대 5개까지 쌓입니다. 칸을 스와이프해서 1차 시도와 5차 시도를 비교하고, 가장 좋은 동작을 고정해두면 목표 자세가 계속 떠 있게 됩니다.</span><span class="en"><b>Manual mode — the coach picks.</b> Give four students numbers 1–4. After each attempt, assign only the good ones with the number buttons, and each slot collects up to five good attempts. Swipe a slot to compare attempt 1 with attempt 5, and pin the best one so the target form stays on screen.</span>
       </div>
       <div class="help-tip">
-        <b>자동 모드 — 학생 자율 연습.</b> 학생 4명이 정해진 순서로 돌아가며 연습하면, 매 촬영이 1→4번 칸에 순서대로 자동으로 담깁니다. 아무도 태블릿을 건드릴 필요 없이 각자 자기 칸에서 방금 시도를 확인합니다. 코칭 문구로 "무릎 더 높이" 같은 오늘의 교정 포인트를 띄워두면 셀프 피드백 효과가 더 좋아집니다.
+        <span class="ko"><b>자동 모드 — 학생 자율 연습.</b> 학생 4명이 정해진 순서로 돌아가며 연습하면, 매 촬영이 1→4번 칸에 순서대로 자동으로 담깁니다. 아무도 태블릿을 건드릴 필요 없이 각자 자기 칸에서 방금 시도를 확인합니다. 코칭 문구로 "무릎 더 높이" 같은 오늘의 교정 포인트를 띄워두면 셀프 피드백 효과가 더 좋아집니다.</span><span class="en"><b>Auto mode — self-guided practice.</b> Four students rotate in a fixed order, and every recording lands in slots 1→4 automatically. Nobody touches the tablet — each student checks their own slot after their turn. Put up a coach note like "Knees higher" and self-feedback works even better.</span>
       </div>
     </div>
 
     <div class="help-section" id="secAbout">
-      <div class="help-head">이 앱을 만든 이야기</div>
+      <div class="help-head"><span class="ko">이 앱을 만든 이야기</span><span class="en">The story behind this app</span></div>
       <div class="about-card">
         <div class="about-header">
           <img class="about-photo" alt="최광열 대표" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUEBAYFBQUGBgYHCQ4JCQgICRINDQoOFRIWFhUSFBQXGiEcFxgfGRQUHScdHyIjJSUlFhwpLCgkKyEkJST/2wBDAQYGBgkICREJCREkGBQYJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCT/wAARCAIwAaQDASIAAhEBAxEB/8QAHQAAAgIDAQEBAAAAAAAAAAAAAAECAwQFBgcICf/EAEkQAAEDAgQDBgMFBQgCAAMJAAEAAgMEEQUSITEGQVEHEyJhcYEUMpEII0KhsRVSYsHRFjNDcoKi4fAkklNzshclJjQ1RGOD4v/EABkBAQEBAQEBAAAAAAAAAAAAAAABAgMEBf/EAC0RAQEAAgEEAgIBAwIHAAAAAAABAhEDBBIhMUFREyJhFCNxBTKBkaGxwdHw/9oADAMBAAIRAxEAPwDsWtUw1Sa1SDVh0RDVMNTDVMNQRDVIBSATDUCDVIBMBSAQRAUgE7J2QKydk0WQJNFk0CQmhArJ2QE7IEiyaEEbIspWRZBGydk7IsgjZOyYRZBEhKylZCCKdkWTCBWSU7IsgjZOyaSAshCEUkJoQRRZOyERFFlJJArJEKSSCJCVlJFkECFEhWWSIQVFqiWq0hRIQUlqiWq4tUS1BTlQrC1CCQapBqYapgIIhqkAnZOyAATATATsgLIQmEAE0gpIFZNCdkCQmhAk00WQIJoTQKyLKVkjogSSZSQCEIQCEswCxK3GcNw63xlfS0xOtpZWtP0JRNsxJaum4owSsNqfF6CU9Gztv+q2bHtkF2kEdQgaAlqmG3RTCdkwiyCKLKSVkCCEJoEhCECQmiyCNkJpWQCVlJKyBWRZOyEEbJEKaVkECFEhWEJWQVFqiQrSEi1BSQhWZUIJAKQCYCYCBWTspWSsgVk0WTsgSAmiyATCE0AnZATQKyE0WQCLJoQCEICB2USpJFBApXso1FRFSwvmnkbHGwXc5xsAF5Dxx26U9C6Sj4eY2okAsal3ytPkOaqPWarEKajZnqJ4oWjm9wA/Nc5WdpfDNJK6J2KQlzd7H+q+YsW4nxbHah01ZWSyPd1cbBaueV4uHEnle6ujb6L4x7UImYWDg9Q370ZXzD54t9h5gGx5LwfFeIKvEKx81Q8ySuJ1cb2HRamGvlja5jZXhpaRa+hUYg6VxcTbmSVdJtlGvfJu5o0tbKAtphXGGPYM8OoMTqYQPwh5t9FoHv8AFbLYDqgPyi9tPJTRt65gf2gcdpHtjxOnp6xg3Nsrj7hd/gXbnw1i0jIap0uHTO0+9GZl/Uf0XzPnDgdb87Ic7N6qaXb7ZpqqKpibLDIyWN4u17DcEeqyQbr5E4P7SMf4RmApax0tLe7qaU5mH+nsvozgftHwjjOnY2GVsFcBd1M9wzHqW9QliyuvSKkEWUVBFk7IsiFZCdkIFZFk7IsgjZFlJCCKLJosgihSSQJJSSQRRZOyEESEiFKySCshCnZCCQCaaEAiyLJoFZFk0IFZOyaOSBWTshMIBFkJoBCaECQmiyBITsiyAOy03E3EtFwvhkuIVsmWNg0HNx5ALZVVVHRwSTzODY42lzieQC+Xe0njqq42xxzYS5lDC4thjB0IH4j5lUQ457SsX4zqXxSTOp6AOuynjJDbfxdSuJlkznKLlXS5WZgDfKNT1Kx4wTdx2uqlTFmAKt01idylK87DdbXBeE6zGCHNBazqVLlMZumONyuo1TYGS6sBBU54jAAGm+ZocvQqTs0kZFcSZnrBxPgupp32c0kWOoC5zmxt8Ot4MpPMcJG83yv1HI9FP5TbkVmV+HOpHWLSNeaxi25PkV1l242aVgZSbGwUjtdIjNGT0VjGZ26nWwPuqIhuYAje+qy6Wsno6iOqpZXwyxODo3sNi0jYhY9i1hGujlfBAZLaaN1KlqyPpbsn7S/7X0ZoMScxuKU7A4kaCdn7wHXqF6KNV8bUeI1mD4jFW4fO6Cqpn3Y9v5+o8l9R9n3GEXGvDkOIsAZO37uojB+SQb+x3HqstV0xCVlLdCIihNFkCQnZFkCQnZKyBITSsgSLJoQRQmhBGyE0EIIoTQgihNCCSEwEIEhOyEAhOydkEbIAUrIsgVkwEWTsgVk07IsgSdk0WQKyLJ2RZArJKSR0CK8m7fOLn4Ng0ODUr8s9eCZCN2xDQ/U6fVeAU7iyJzvxP0sN7Lre2HHP2/x7XWdeClIpmWOlm7/ndcf3lhcaWFm/1WtM2qpGEh19NQCk4ZWnorWjO14ttlIU6qHu2NHldBbw7hJxWvawjwA3K9swDBo6WnY1rAAAuD7OMPb3b5nDUu39F6xh8VwAAvndTyXu0+p0nFO3bKpKFtrluqrxbCIZoXExtJ/mtvTx2AsPopVUX3ZB3svLjbt7MpNaeDcb4WIprW2K4l0BMj47aujzD21XsHHOH5mueBfVeaCjy4uyK28R/wDoJX0+DLcfK6nDWTSNZo9pGwWTh9OZJDYE+HVOnpyXA9Rsea2+AUgfLmOlg4n2BXd5ZGldTuMLiARleQfVZlKzL3rNRezfqs2LumzOY9oyTEWF9LjT9Fi1ETqaucM1wDa/p/0KNJxUvfREDwuDQQ7+fsR+a7bsV4kk4d4qFFLdtJiJ7p7b6MkHyn87e64oVraeZoPyvGZp5WO4+qz8NaWYj3rSQ4OBHXTUFRfb64BUlg4JUurcKpahxu58YLvXms6yrBWRZOyaBWSKkkQgVklJCCNklKyEEUJosgSSlZJBFCdkIIpKVkkCQnZCBposmgVk7ITsgVk0J2QJOyaLICyLJoQKydk7IQJCdkICySlZFkEVjYhUNo6KeodtFG559hdZdlpuMZDFwvirwLltJKf9pRY+OK6ofV1s07zd0srpD7klVPcBodgLI0zLHlkuTbqtxhm0cwvITtcFZjwKlptysLrTwOLWuPVbPD5TIY6durnvAHmTopWsXqPA1B8PhsN9C4Zj9V3tBdhsNlz2EUwhiiiaBoA36BdVQwHQ213Xx+W7u33eGduMjZ07yLXU5gZRYaK2np/DqLHorjBpay5yN2vPuNKQ/BSv6aryapAbi7CBqAW6+lv5r3fiPDTU08sRFs7SLrw/GqV1FVwvkBDmSZXA8r6L3dPl8PB1WPy080Qjce70LG5m/r/VW4diD2VLMtmguIPTYjVV4qXQyRTs2AyOHXVa7WF7y3Vrtj5Fe14L4rPxTKyQ5SW2d9ClDP358ZblIs6/puqZKj4gyyytsyTQW1sQB/S6xY80Ty0uJHIgaeqaTbZ1UHeUzGNsHw6Wtu07rZ4fTuc2M6hxcB7bLRQV7+9s/W2my63CQ2SISeEgNL7X6KVrF9G8GuMnDGHuO5iF9brdWXN9nEpqODMMlNvHFfTlqulUjN9lZKylZFlURQmhAkWTskgVkJ2Qio2RZMoRCSUkrIIosmkgSVlJJAkIQgknZATQJMBFk0AhNCAQhNAWQmhAITQgSaLJoEhNCBLU8V07qrhvFIWfM+llaP8A1K26pqou+p5Yx+Nhb9RZFfDUpLHOB0IuFjE3A5lbLH6c0mM11OW5TFPIwjpZxCwYIu8d5DUrbmbNrLfcGwRvxiOonIbFB47nm7kFraHC56xskjI3ujjFyQL3PIeq7vA+FxhdPG6ump6dxs55keGkE8tVy5MprTtxYW3bp6PimlgfmEUxaL620W3oe0jD4pGMfFIzWx1C0tPQcMvLRNisThu4B5IHuAtgzhvgyYBsWM0zH9HztaT/AO1l5dYfT275Pt6BgHElDi4Bieb+fRb1ha/Uc1wWFYAcJkZNSTiWK2hBBBHlZdXQVLiA0krhn2/D04d1nldiFO2VliF5H2m8NOMBqWEZSdeRHmvXqt5IsFwHHdJPWxZZauCkpSLZ5pAwHra51PotcV/Znm/2vFIpmVNM6CWxkGvqtZLE5oIBLmjS3MLpP7B19RV5aBz6lhOkrY3hoHW5Av7LexdmFa8M754a8jV2R1gfovfMsY+ZcMr8POi0yAXJuOg3SIdG3mL6kFeo0vYtiWIF/wAJWUbpBqI81yfYaj6LUY32W8QYJUTQ1OHiTu2d4x8TiWyDyPXyWu+M/jriIyJH5tAfrddRhc5/Z1RHlF7XBO4C560bZcrqeRhBsRbZdNhQjjZHbMQTlII1ulMX0V2XvbJwDgrgMp7izh5hxC6iy57s6gNNwVhUbuUOnpmNl0dkiX2jZFk7IRCSUrJWQKySlZJAkFOySBITslZAikpJIEkpJWQKySlZKyCNkJoQSTSTQCaEIBOyLIQCaLJoEmhNArJoQgE0IQFkJoQKyRGimkg+N+03DxhvHuO0zQQ1tY9wB6O8Q/Vajh2kZWVndSC7cpLvbkvVe2vgiWp40q6ynterhjmDSdyBlNvoFxHA+Fvg4i+HmGsTS5wB5/8ASplnNVuceW5b6qithxWOppMLa2toGVEojY0gMjIJ3BAF7XvuvSsP4ewvCY2spqaN0oHjqJRnkcepcdvZR4op2jC4KtrbnD6qKq/0hwDv9pP0W3xDDGVoMOYmN2jg02DgvLnybk+Hs4uLVvy1lRxzhuGRSOZNUVDYSGvNKzMAemYkBZNL2jUNf8NDPR1TI6mN0rHTsjkaWAlpLspJbqDuB9Fl/wBj8LnojSyRmKNwsWtFgfoq8M4KwrBp3zYbHJ3z43ROflvdrt99NtFzn49fy72cu/Hpnsw0RE1GEvZQyO1vCPun/wCeP5SPMWPQqrB+J8Zxlw+Ciw6jEbzDOanO8iVpIeGhtrjaxvrdZPwbeHsG7u7yxgOQvGZzRyFudlidmwZUQySuaHOlnmmcbaXdISsW/ra3JO6SeGTxPxVjeBtfK2nwur7x7KeERPka5kjyGtLg6923NzaxWTFhseHf+RNaqxBw+8rZ2gvcf4f3G9GtsAtlxvDBQUlJjL6eNzaaphebtuCWyNcLjpoVZjVJJWwOEBtmb84BHrpuFN/rKuv205eXi/B8Pr46Werklq5nBrIoo3Pc4k2A0HVbbAuKsFx2Z0NHiMTpMxbkkvG+45WNrrk8T4Fp8Xni+Mc8d23JoALgbcvPdb3A+y/AxTMpalzZ4WvzgEkG/mRb8lqzDXvyzLyb9eHaHB5MgL43vaPE17fmYerXDY+YUqPE63HI2mGGnr3wtMFVJJTve2GVpIN8rx4tjax5bbLGw6kk4YnbFRV1RUUZ0MNQ/PkHk7f63W77KKZ39m5a2RhacUrKjEDy0kkOX/aG/VdOHO4yyOPNh3WWvmXtHwT9n8T1b6akGHlzWPkpmSOka1zt7F4B1PXbqlgbovgA2UjvXuBGX/vovUu3DC6WTjPD46pzmU9XTtEr27t8ZYHeds4VGM9muEcMUsdHBTSS1z2tkDy4lsTb6f5iTcW2svR+WSTbhjwXK24/D1LhmA0/D2GxOFnNp2X+i2SUMXcQsisBkaG6eSkury0kFOyERFFk0IElZSQgjZCaRQKyE0kCskpWSQIhKylZFkEUrKSVkEUKSEAhATQCaEIBOyE0AhFk0AhCaBJoQgEJ2RZAITQgEFNCK8w7WKd7sZwaVoIGR7S70N15dg8ebjWunAsw+G3qP+F7b2mzQxYdStewF2dzgegtY/r+S8moacz8QCsjs2MNyOsNzy/mvNndZV7sZ3ceN+nTMp2VEboJWh0crSxzTzBFiFncNUrmw/s+pdmq6QBpJ/xI9myDqCND0IIToacPObnyWfJhpqWsBju9mscjXlj2H+Fw1H6LzZX4enjx8bbWCiAtoFlCkYwXsCtRFR4+z+5r3OHLvoY5D9RlV37M4jqRllxTuWnfuYI2H6nMuf8AxdvP01vFFcY3MpKcNdWVALYWn8HIyH+Fu/rYc1DhWjgw53dU7MsUYDR7C2vmoYhhsGDyOZC581XNrLNI4vkcPNx19tvJbXhqjJjznc7BLfGoY4/tuuijp6TEoHUFQ0PjnFnRyfKTyPl091raNnwkn7MnP30IysJNzNGNA4dSNA4ciOhC3bMHdKzKQ6OW2ZhWmxXDHy1j+8AcHESAPvYu5uaRq0+YU3qaq2bu4nJRQuN8rdVA0zYyMjQFj/A4m3wx1NVbzlY+3/s0n81YzAsRqRlmrqwMO4EoYP8AY0H808X5PMYdYyfFah2D0sjviKhuSZ7f/wBtCdHPPRxFw0bkm+wK9MwWkjoqEQwxiOONgYxg2aALAD0C0HD+CU+FxiKniYxpOZ2UbnqTuT5ldeyLJDblZduOPPy14121YR+0a7Dqi/yOZDoNfE47elrrvavBLTYZLUMZJ3dI6Fzgbh2XY/7gjH+HW4u8VUlyKMd61v7ztv0JVmGTuloJWOOrXNsOgW991mNTGduGWc/+8Josmhe58pGyE0IhJWTsiyBWSUkkCSUkkCSKlZJAkJoQJIhMpFAkk0WQRQmhABCEwgE0k0DQhNAIQmihCE0QWRZNCARZOyEUWRZCEQJoshFcD2rxvNLSvDSWZXt0HPQrzfAZBFKYJGOa97hIwnmBuF7xjWFR4xh8lLIBci7HH8LuRXk+IUMcNTE6aEMnhfkPUHYrzcs1dvfwZzLDt+mzoH6Bb6jINiVz+H6ixW6pnZALrycj1cbexSANClUzmKEuG4C10U+u6dTVB7CL6LhHo05OkrGVdXWSzuGZj3B2Y/KB/wAKzh7jPC6+WaOhqu87okfKWg23tcaj0Uq3A6aoqXzsMsUjxZ/dusHeo5qUfDtII25Rkc3m0Lt4Zu9t63tHwrAKqlFfiAhlnNo8wJ08yBYD1XU4rXYfiWFtqIPDPnaWgag33t7XXCR8OUj43RzMZLmGuYXWywzCjQRZRLJIxujc7r5R5BN+NRNTe62kUgEm+62EdSALWutaA22uhCy6WIy6g6DkVxm5W8tVvsLc1xBI+q3L5Rl52tyXP0YMQAuVuIbubc6levjvh4uWedsPEZ5IKBzIY3ufO4Mu0fK3mf5LX0eHT4a2oFRI0uksGNb03uei3g1kYGn5T4gOiwa+QSTkN2bp7rrhh3Z7vwxycvZxXGfLFskpIXrfORRZSSQKySaEREoTRZAkrKVkkCSKkkgjZCaLIIoTsiyCKSlZJAkJ2QgiE0JooTSTRDCEJoBCE0AmhCATSCaKEITQFkITsgSE0IALluK+EX4tJ8XRFjZyLPa42Dujr9V1SCpljMpqtYZ3C7jy6GmfSVL4ZRZ7HFrgOoWybpsreJaf4bG3vt4ZgHj9D+YVTdRdfO5cdXT6nDlvHaQeWtJWHLWjNYnVbGKNskeQlcpxHw9USzCSnr6mFx5MIt9CFxx1vVejy3TayCM3fI0eW5WXDW08rfC8A+ei4eHBqxg+/qaqTqQ4N/QLbUmDNc1tp6xv/wDZ/wALp2z7dsMJfbrIJmRnxStPpqttTuiqWDupGOPNuxXHR4IDa9ZWD/WP6LYt4bq5YXOoa+oZN+EvAc0J2wz45JtuKqRkMwY/Q8wtjhLg/MBqFxtFg+KGoE+IYhPPJsWOaA38tfzXYYSzugQud9uN9N9GwaLYx+CMLVxP1Cyn1GWNejB5eRhSNkFdJUMnkbm0yDbRCe6LL3Y4zH0+dnyZZe6SEWRZacxZJOyEEbIsnZCCKLJ2RZArJWTSQJCaEEUlIpIEgppIElZSslZAkJoQQTCEIpoQmgEwkmiBNCEDQhNFCEIQNCE0BZCE0AhCEBZB2TQdkHM8aUZkomVbR4oHWd/lP/NlzdLVBwykr0KogZUwyQyNzMe0tcOoK8xxOkmwPEHU018u8b+T29V5efDfl7Om5NfrW2bKWm4UJbSHVYlNVCRu6yWOD9L6rw3HT6EySZACVc2nvzt6KoOLSsmJ5IvZG5WRS04BBNyVvqN4YwALT0p8QK3ELbgKmV+1dREHSF1tSp0wyK50PMqOUNU0xtlxPUzKZH5QdGrXS1YiGVuris+njyRNB3IufVerp8d14+pz1jr7WhCYCa9z55JKSEEUWTsiyGkUJkJIhWQmiyCKVlKySBWSUkkCKSkVGyBITQgSSklZArITQgrTSTRQmhCBoQEIGmkmgE0k0AmkmgE0IQNCEIGhCEAhNCCBC43tKZGMLpXkDvBNZp52ym/6BdqRdeQcZ8RnHeIa2jgeHUmFyfDDLs6WwMh9rhvsVjP06cc3lGqpsQdC611uKXEmvI13XNyNI5KUUjm8yF5LjK92OVjtYp2uF7rJjmA5j3XHRYlLFzusluOutqFzuDrOR2UNU1hFytvSVrSBqvOf248nQLIp8Zq5DZrsoU7Wrnt6O/EGW+YaLCqMUA0adVzdNUTSAAucStjSUr5Hgu1WKsbbDInVMwc87lR4Q46wni99fS0bnRVuHTPgqaWT5m5XFocOrTbf2K2eH0/cx5gNl84UGNHgTt5xOpdmFN8ZMyoaOcMhDifa4d7L29LN7jwdXfVfUCaTXNe0Oa4Oa4XBGxHVNel5CQmhAkJpIEkpJIlRQmlZAJFNCBJFNJAklJKyBITKSASsnZCBIQhBWhCEU0ITQCaSaBoQhA0IQgE0k0AmhNAJpJoBNJNAJoUZJGQsdJI9rGN1LnGwHqUGg4+4ug4I4Xq8YlyumYMlNET/AHsx+UfzPkCvAezSpfXYZiEkzy+Z1YZXuO5LgCT9brD7aO0T+2vEXwtDLmwfDS5kBG0z9nSe9rDyHmsTslxBseJVeHvcB8QwSMvzc29x9D+SzzY/263wZf3I9GdThw2WO+lLVu3UnhuFU6nJ0yleDufS7Gn7h21kfDOvey3LKK/JXNw0n8Kd52NRBTOcdQtxRUY0KvhwwtOxK2NLREfhssXLbcx0upIQ0CwW7oYNiQsalpdrhbimjsFjbVZ8DBky25L5u7ZcIbQ9ptXVgACppIZD/msWn/6QvpSn0Fyvmftbx6PG+OK58Tg6KmtStI55Nz9SV7uj3c3h6vXY9h7IOJf29wpFSyvzVWHWp33Ormfgd9NP9K7lfMvZrxeeFeJaeaVxFJPaCpF9MhPzexsfqvpppa9oc1wc0i4INwR1C9nJjqvDjfAQmiyw0SEIQJCLIsgSSkkiEkmkgSE0igRQmkgSCmiyCKE0WQKyEIQVJoQihNCEAmhCBppJoBCE0AEIQgYTSTQMIQiyBoV9PRS1BGUWHUrIdhJZKGOc119r7XW8cLU21ctQWNPdszn6D6rwrt647qocvDNPO4SSsElVlNg1h+Vnva58rdV9D1NHFCLE55LaDkF8ddsdQ+q7SsfL7ExVIhFhYWY0NH6LpMJEtcVyyjkFmYNXyYViVNXRE54JA/1HMfS6xbeIW5qbG5Tqlm5qsy6u30lhtRHiFLHPE7Mx7Q4W81mMpwTYhcP2X4wKnB4oHP8AHTnuyPTb8l6HEAXA33XxOTG45XF9zjy7sZkhHRtJ0WXHRgdVksjbbYK1oHILm6Ko6YDWyy44GjcJxt8lcxoO6FSiyg2AWZE5YoAA6JPq2wMLidgjLA494uj4T4aqqwOHxBb3cDTzkOg+m/svlgyvnmLnuL3OcS5x3JOpK6/tb4vfj+OmjjkvTUZLQAdC/mfbb6rjqcZWFxX2ek4+zHd918jquTuy1PUXiQAkk2sLG/5L3jsV7Q4sSw2n4cxOdrK6nZlpXyO1nZvk/wAzRy5j0XgEjsrTfYjX0XTdkeETcRdpWB07M4jgn+LkI/CyPxX+oA916cpL7eeV9YW0vy6pLMw55rHSziOzC8ttzIGw9Fl/s6KpLiI5IehaNPouNw+nTbUIssmooZqbVzczf3m7f8LGXPSkhNFkRGyE0FBEpFSUUCQmiyCJQmhAkJpIEiyaEEUJoQUphJMIoQhNAJoQgAmhCBoQhAJhFlJjHPNmgk9AgQUmMc82aLlXwUvebnbcBZ8UJYPu2sb5nUrcw37TbEjw57m3sfU6D6qUlGymjzFwlk5W+ULMNPO7XMH+qTqaZws6Mn0K6TGRFuFm5ZcaOB35lWzX797SLkHMFCKJ8JjLhazhositZ3c7ZAtI10jO8kmk3AAt6BfH3brhrsO7UceaQbTyMqWnqHsB/UFfaQY0eGwt+oXzb9qXhl0NfhHEMcd2ysdQzO/ib4mE+xd9FSvAtgDbVS80rWJbzTG1lGXV9nOKfA4/FA9+WKq8Bvtn3b/T3XutJKXxAnQr5jgkfFI17CWuaQ5pHIjUFfQnCGMsxjCqaqaf71niH7rxo4fVfO63j8zN9HouTxcHTQTudZp91nx2AFitWGOa66zIZXWsQV899BsGOHkpiQLFafVWN90Fpk0vf6rjO0TikcP4JNLG8CeQZIh/EefsurqZe6iLnE2AXzt2l8SHHcdfEyTNBSksbbYu5/0Xo6bi/Jn59PP1HL2Y/wAuUJdNMXOJLnG5J5lZIP4RewWPEcozKxzw1t76n8l9qPjIzu3F9/0X0F9m/hT9l8N4nxdPH9/Xk0tJcaiJp8RH+Z1h/pXg2BYNV8SYzQ4RRsJqa6dsLP4bnU+gFz7Ffb2FYFTYRR4TgVG3LS0UTGtHVrRYE+ZOvulXFtsMohR0UUNtQ0X9eazmhMjkm3ZYViVUxY8NHv5rFnwmKoGeH7p51t+E/wBFbXnK5p6lWwPvGLJqX2vw0NRRTUx8bdP3hssddW7JILObfzWtqsJbJ4ohkPl8p/osXD6JWmSVs0EkD8sjSD+RVa5qiUJpWQKySkhBFKykkgVkJoQJIqVkkCQnZCDHTQEIoTQgIGhCAgaaSaATAubc02MfJIGNablbWipGQkggOlA1J5Lcw2lrEioHlveTAsZyHMra0rYoo/umAab7qUDc7nB2vUqIb8NUAbNcukxkRhYF3cuIVcEpcHNN2+62Ie6GqMEpB6HqqKqhMVXHXwaOabPA5hGOOMT4qlu1gVobMRiwICeTRTg8cLHdWgqwgALKMKYeE+SyKqMSR3UZmAsJ5q4DNC0+SowWEmMHm02PouO7XOExxhwFi1BHGHVTIviqb/5seoHuNPddpGMkzmnYoLe7Jv8A4Zv6tKo/PF4IIIBAPVKwBv1XfdtPB39jeP8AEaOKPJR1J+MpdNMj7kgejsw9lwYPTxHzVZO9jsvRuyLG+5r5cIld4Z/vYb/vgeIe419l5u0deSzcLxCbC6+CspzaWnkbIz1B299lz5ePvxuLpxZ9mUyfVkNOJIwSN1ayksVDh3EafGcLpa+lN4aiNsjPK429jcey3LYm2Gl18Gyy6r7ku5tgNpyArBDYXKzwwW2WDidSykp3Pc4NAFyUkNuA7VeKRgODPiheBUVF447b+Z9gvnzVz7k6nmuj464ldxNj01Q1xNOw93CD+6OfudfouetYaL7fTcXZj59vjdRy9+f8AHy0CTrvfpoOiZblGh9VZS08tTNFTwRullmeI2MA1c4mwA+q9Dg9z+y9wV8ZiddxZVRfd0oNJSEjQvcLyOHo2w/1L6MoI+9qZ6g9crfQLScEcMw8DcG4fg0YbnpKf75w/HM7V5/9ifYBdLQQ9zTMad7a+qzWotISAUiFHmso12JDVqjTP8AHkrsSb4brEgJaWo38MwvLAbqozTbtAI56oeO8FgoZgxt77KsoPBlNn04cDv4lg1NDkJcy4HR39VsIDLVO0OWPrzWcKOm7tznRh2XmTdSyVfTlXNLTZwIKjZdDPRRSu7tzdORG4WprKCSkcb+Jn7wXO42G2IlZOyFhSSTKECSTQgSSaSAQhCChCAhFNAQhAJoQgauZA4sL+7c8AXOth9SsihoBJEambSNpsB16rMfG6WmeD8zzf35fRdMcfmpaupYGAB+TKSPmJuFkRRNab2sOZ5uKjh5bJAI37fKU6WTxObe+QkEHduv6LoycbS2ota2bVXVcHeR6fMNQrhCPmG6nlvoUGNSSd4yzhc7EFYXEjRFhrf8APYLNhb3VU4cjqsXihuekgYPxStH5hCe21p25YWDoAnIbBSjFmhVzu1sohEXYVKHWBvpZDRdtk4hZjm9CgxJRaUH2VkvyB+9tD6KMwu73VrDdliqrxH7TPCf7W4PpsfhZepwaXu5SBqYXkC/s7Kfcr5ZcMrtToV9/4vhEGNYfW4RWNDqeugfTPv0IIB/P8l8IY3hFRgmKVmGVYyVFHM+B4/iaSL/ldaZrX2sddApAWdomWg2vqead7DbZB7Z2EcRmWjq8Bmd4oD8RBf8AcJs4exsf9S9iiku0ar5N4Nx9/DXEdDijSe7iktKB+KN2jh9NfZfV1M5romyRkPY4BzXDZwOoK+T1nH2590+X1ek5O7DV+GSXAAk2AXk3bNxcMPw79mU8lqisBabbtj5n32+q9HxnEo8Oo5ZpHNYxjS5zjyAXy3xZj0vEmN1GISE5HuyxNP4WDb+qdJw92W76h1XL2Y6nutNa7k2kg3KfMNT2HkvrvlEbOPovX/s48DHiDi047VxB1Dg9ntJGj6gjwD21d7BeTUtNNVTxU8ERlmleI2Mbu9xNgB5/1X292acFRcC8IUWDtDTUAd7VPH45nWLj6DYeQUpG+qh3jooP/iOufQLYgWasGlHf1ck34W+Bv81nFZrSJSAuhybVEYmIj7v1WKYsjAeizqpuZovyVFu8Zl8kajHgk8RHksj4aOY6gj0WCLxzgFbOG4Y59r9AhVjIWQR2YLKBddrYxvI78grGhztXfRRpmZnOkOw8LfRVES28xPIKFRHnbyuFfaxKWQOaURz9Zh9gZIGkAalnT0WAV1AY697eRWpxLDiy88TPD+Jo5eaxlj8xZWsSTKS5tBJNJQJCEIEhNCDHCEBCKaElJAKcUZlkawbuNlALZYNT55nynZoyj1Ksm6VnSANiipmjRup81bGzTbbQKySHMA9u40TY223JehhCNncyCw8J3VFY59FX09SDeGY90/yPIrPLM7CearnpW11FJTONnW8LuhGxUGXC6xtffYlXFgGv681qcHqnTiSmm0miP/f++i28dyNbZuaVFEkf3oIWLjTM7qEdZ2/1/kti6O+2/JYtc3vHUd+U1/8AaUIy2aMHosdxzzAK97srFTA3TMeairgNfIJWs4+YUwNFC+qIxpBdxU49kOGqBoqqqrFg2Qcjqvlv7TPCowrjKDHYI7U+MQ5nEDQTMs131GU/VfVJAkY5p1XnXbXwmeKuzvEII4y+tw3/AM2nsLk5R4gPVmb6KxK+NwCDbZBAB3vdTeALEapOGtzoqyTNCvo/sf4mGMcGxQTSZqnDT8M+51LN2H6af6V84X5rr+zjiwcMYzJ30mSlrIjFL0Dhq0/W491w6jj78P5ejpuTsz8+ndds/Fpjpm4PA+z6jWW3Jg5e5/Qrxsa6nZZ2PYvNjeLVFdMSe9d4Qfwt5D6LBda1rrfDx9mOmefl/JlsZWkXshrfFca2StposmhoZ8RrIKKlhdLUVEjYo2DdzybAfUrq4vYfs08CftriGXiasivSYWcsAcNH1BGh/wBIN/UhfTtbP8PTPcN7WHqtNwHwjT8EcK0GB09nGBl5ZAP7yU6vd7n8gFsar/yK2KDdrTncs1qMvD4O4pmNPzWufXmsgoaLBJ5WVROqOSiCglEV1D7NKrp2aJSnvHWGyvjblaitfiEeSRj/ADAK2cDQIx5rHrYe9jPlqsimOaCM+SFFScsRDNHO0Cmxgija0bAWUSM84HJgv7lWO1RFTvEbBSbHpZSa3mk91tBugrl/hGqxyAGyOkBuBrqska2KxMQqIYIJJ6iVkVPEMz3vcGtsOpOwVHPVsIimNhZrtQseyzu9ixOlNVBIyWKQd5E9jg5rm9QRoVh2XLOarURshNCwqKSkkQgSE7IQYqYSTCKE0kwgYW/weItpQbauJctFGwySNYN3EBdbEGRMaxugAsumE+UyTY2wUHx5QR1VzSDZSc24XRhXD4kDwS35FDPu335FWSx5m3G4RWrr4TRV8dfHo0+GT+q3MbwcrwdHLHdGyphdE8XuLKrDHuDJKWQ+OE29RyKo2Z0WLUAZ4h/ET+SyQQ5l7rDrHlr4T0J/kpEhzuzODQrmNsGtCwZpgxjnk2sN1kwSuipmyzfMG3PqUVfK+33YPmT0VbnBjLnmoNe1rczzqdT5lVv7yodsQPNBEy3OibWveegVrKcNtrcq0NATYTWBosseoibe7mhzHDK9p2IKykpIw9jmnYhIj4Y7SeFXcH8aYrgwae5imL4C7nE7xM/I29ly2UAa30PVfRX2oeFjLTYXxPFHd0TjQ1RHTV0bj/uHuF87kWN7LbKGliERauLjsNB6qMhtoNXE2AVjW5WBg5c+qCQs7VIAgnmmRyCC7TnbogALna48l7l9mTgX9p4zPxXVxXp8PPc0uYfNO4auH+Vp+rh0XjOFYXU4xiVLh1DEZaqplbFGzq9xsPZfc3BfC9Nwbwxh+B01i2liAe8D+8kOr3+5J/JSrG6e4Rxlx0sFhYcwve+d27zp6KeJyeBkDT4pTY+nNW04ysAAWWmTfRRedE7FI6iyiIBJ50UiFGwIRVcbbuur+QSa1SIugiTe4tdOMCCPxbC5U2tAVUrs9RHEOmd3py/NEWwtOW7vmcblWWQ0dUPeGNLiiIyPEY8yqQC7UqLLykudrdWEE+Fu/M9EVU8ue7Izb8R/kvlXts4/quPOOP7IYZicdLg9I807u8eWRSzD53PtqQLWAsdtBcr6d4mxA4Fw3ieJRtu6kpZZmjq5rSR+dl+ekM9ZiGLRPjdK6rmm73PG0ufnJzEgc7brUS17b2dcbYv2cQRtkbLiuBSEOqaNoPfUbibExg6XudWaX8jqvccHxvDeI8OixTCKptVRT3McgBGxsQQdQQdCCvN4Oz/h/i/AGYxw3VtxGoIzy4iHuZXOnOri9pPd3v8A4bha2zhus3sjNXS13EWHzBrIWzQ1Ecbb2zuZaV7QdWhzm3ynVrg4Ha6vNhZPJhlL6ejpFNBXldCSTSKAQkhBioSTRTTCimgysOF6yLyJP5Lftve/M6BaXBxmrHE/hZf6lb+kacxkI62C7Yemck2MmHKyvYXnRw1VrCHNuEwtMq3sunG78JVtrhVvaQcw90FUrDE7O3bmq52iOWOsZsPBIOrTsfY/qssWeLHYrHdFdskDiQ14Lb9EisqGRri4AEkFYldrURtPMO/koYXUXhPf+GWImOX1HP3391GvnHewOYNTmaB1V15T5VtaKuq7saxxG7z1PRZEx76QMHyg3PqnBTtoaT+I6k83OKWZlPA+aaRsbGgve97gA0cySdgpVXgNa0udbwi5J5BeTdoH2hcI4ddJQcOsixauacrpiT8NEelxq8+mnmttNxbwl2uQY9wZhuKSOeIbGeO7WvN/mjP42tcBfkQeYXytxHgldw1jFVhGIxd1VUsmR4G3kR1BFiD0QfaXBHF1Fxvw7S4zREAStyyxXuYZR8zD6fmCCt8vkTsU7S3cC8QCnrZD+yK9zWVIP+Edmyj05+R8l9dMc17Q5rg5rhcEG4I6hREghAQg5rj3hmPizhjEsGfb/wA2EsjcfwSjVjvZwH1XwvV076aaWCZhZLE4se07tcDYj9V+hUrBIxzevPovjv7QvDBwDjyaogiyQYs0VLQBoJNpB/7eL/Ut4+krzOAZ3mU2Abo31V1tb2SMYja1jdhz6oG+VVBk3IBKGi5vrcbpkW2N/JZOH0FRildT0NHGZKmokbFEwfie42A+qD237MPA/wAZilVxbVwgw0V6ekJGhmI8Th/laberl9LXstHwVwxT8G8L4dgdPYiliDZHj/EkOr3e7ifyW2qZe5p3yHkFm+VjCY74uvkk/DH4G+vNbKBuULBw2ExwNzfM4lx9StgHBjbuIaOpNlK0jIHsN27KoVLdnggrK3Cx54Q7lY9VBJpadnIIWI5jm31IKsje626GmU0WCapZIc1irgbohqEbAHvlP4rC/kP+lN5NrDc6BGYF2UGwZ+aosLw1pc46LFc985I2BUJpxI+5No29dvVV0mKU1ZK6KkzSlnzSZSGj3O5TRpltGUBjd/0VoaGNslG0NHn1TvdQcT201MlN2W8SyQjx/BOHsSAV8r9k+H0vCmOx8Y4o+mrcOosInxBsUdy4PLhA1jgQLOzPIvqN9V9f8a4V+3uFcYwr8VTSSxt0vqWm35gL5K4aMuO8MR4Own4yegqcC7oRtGWVjxUQkuvc53MLALaX32C6ccm5tm+m+wCHH8Mwodo3ZzRT0mHSl7K/CZ3CRjcmrst7d5F0Ojm2K7vs74tg41xmbHKShnonTwOgr4SCY21LC0gtdzzNdz1FjffXhK/tbwubsLl4dwPC6vDqmAw4bLG94kBbJmc94cLEl2RwsQNXLs+Eaqr4bxbgrg6ocHVjsInrsQOUB2dwHdh3Uta3Lc66BezqbcsL3Tz/AOJ9uHFO3L9b4emITSXyHsJIqRSQJCLIQYSaSaKaaSNkG14ejzuqH+YaFv4xlstVw7Hlpn9XOutuByXfGeGKkx3dv/hKybLFLcwtzV0EmZtjuFai0IcEA2KkoKB4SQm9ucX5hEosQ4JA6g8kVjSQ5ajvR8sjcsg/QrUNrS/Gadkwt3Tn6XvrZb9/6Lkpn/8A4ney+zXv/QfzXSeiOlnqO9dffoAvnT7TGLcVslpYPi7cMVTbRNp/CHyj5myn8R5gbW5XC2/b72q4pwnFDw5g7JKWprIC+WvItlYSRkjP73U8tLala3sLk/t5wZifAXFGH1klC1ve0dY+F1o7m9g8iwc0nM3XUEhYK8O4d4kxDhfGKTGMNmdFVUzw9p5O6tI5gi4I819FcX4NhnbtwLBxdw4wNxyijyTU4+d9tXQu6kalp5g256eYT/Z442ZidTRspqM00UpYyslqmMZIzk8C5dr0svQuyfs24l7OMbFc/iPCzBKMlVQwtkl75t9LO0AcDsUJK8DyOikIdcFp1BGq+lPs79pf7Vohwjis5NXTMLqF7zrJEN479W7j+H0WZjnYjw3x3jlVjBq63CpZnXmgpmMLXv5v12J5gaX15q7A/s5YFgOKUuJ0eP40yqpZWzRPHdizgf8ALsdj5FB64Ci6SLqId185famxPD31GEYaGtdXRZ5y4bxscLW97fkvoSurYcPpJ6uoeI4YGOke87NaBclfDfHfFE3GHFOIYzKXWqJT3bT+CMaNH0C3ilaEalLTU7JG9tEFxaNRoqh899t17X9mXgv9r8RT8S1UeamwoZILjR07hv8A6W3Pq4LxeCJ88jIomOfJI4Na0buJ0AH/AHmvuDs04QZwPwZh2DZW/EMj7ypcB80ztX/Tb0AUpHULDrXd9NHTjb5negWW42F+iwqP7+WWoP4jlb6BRqMpgy2Wl48p6So4YqzW1hpIWMJ7y1xcgtAI57re21CqxChixGjfTTNaWPt8zQ63sVy5O7tvbN1rHHDKycn+35/w8qm7Y5KLDIqTCoaGWSCJsYkq6oF0mUWzEN0BPqVFnbriDIWx/wBkq6tltYvidfOfINaQPS5WTxPjfDuB8SwcJ8N8I0uMcSSta8gQMDKdh/HJIQbWGu3ML0XCsPNBAx0xY+qLfvHs0bfmGjkF5unz6jDk1njLPu78fxNWb/5Pp9Vy9FnxycOFxs/mef8AO5f+7iKLtJ4lr2NeezbHWhwBHiDd/wDMAt/R8Q4xUNDpeDsWpwT+KeAke2cLVY7xXxZR8VikwTAKXGcJBjifJHO0SMlLX5gbHwtDgy5cBbUC5K1//wBt2HUN2Ytg2JUTy5sbA1mcvkzFpYQbZXC2bKSfCRzNl9LLPG+sJ/1/9vkyX7ehwufJEyR0T4i4XLH2u3yNiQsljtVoKXjvhyp7sftSGEzTPp4xPePvJGFocG33sXBpPXTdb+wC5NE4ua0vGpGyxp6hpYG3/wAx5p11UKeEFx0JWrZWfFTO7knXR3n5LUiLjNVTSd3HG2JoO7vmPmtpSQNgjDQFRTtL3ZnauO5WY3QLNqpIvZIFK+6iKZj4geYXyPxXgUnCXazjWGQzMoxVuGJYdPIXZYpR94xzQ0WvnaAXHZubQkhfW8urvZeX9uvZc/jvBI8RwrwY5hYMlOW6GVu5Z/MLUHEz4Hwh2iYBPDVxN4cq8SmaWVbWZRDUtu40k4NgHNc9+S9s8bm5SbWWs7OOzviXgztKY7iOf4lrKN8FFUCYyNmjAOjb6gNA2O1wuL4HxSuqq/GJpcVih4irJz39JiMYkpa9mW3cSMcbFwcAW2sQDcHSy9F7OpK6l4wpqKrwTAqN/wALMH1NHUSyvflIGVofowX1IG9ui73l/t3HJz7P2lj11JNJfPdySTSQCEIQYCaV0IqSDsUrp7iyDpcF8MYHVgK2V7Fa3DvAYh1bb8lsLXK9EYTYbuQ490/MNk2aJTDNG7yRGSHB7QQm1245rn8SxaSgohkOUyuyB37uhP8AJcxTcUYrSzk9+10TNSJNRZcc+aY5dterj6XLkx7o76tr6aia34mVsYfoLqumrIKlt4pWSN6tK4HGOJY8VqmSmJzIjHlc0m+VwO48isKCqfT2loZZWy3ve9so/muN6uTKz4ejHoLcN329Sve4O4/RcY19+Oa+I7Q0sZJ/zH/hZeD8Yse+ODEgI5CLd635T6jl+ijWNiZxVNUssW1NEzxDZxa4jf0IXq4uTHObxePPiy48tZRkz4Xh9bXQ1VTRUtRNA0iJ8sTXujvvluNL2C2Aa2Yd0+4Za1gbLDpn5yD1CtqZxEABcvOgAW2LGPWYZQRXDXSF5/Dm0WDBTQwTW0BBW3pcPObvJTd7vyWPieDyO+9hPiHJFlRoHiGZzgdHLfQzBwC4yCplpZu7mB910WH1TZWixUMo299Ei5VtddEjwxpcSAALknkjm8f+0nxo7BOFocCppC2oxVxEljqIW7/U2H1Xyz3jXHUrs+17jJ3GnG1dWxvzUkJ+GpRy7tvP3Nz7riSNLdVtmpg3Nw5K+oBFuaQygWIIQBbU7Hog9Y+zrwZ/aTjYYrURh9Fg4FQbjR0x/u2+xu7/AEhfWgK4PsW4MHBfAVDTyx5a2sHxlVfcPeBZv+lth9V2skovlB1Wb5U655ZTuyfM7wj1KlSRCGBjBsBZYrH988MvdsZJ9ys5ujR6KVUhv7qNXO6mpZpmRmV0bHObGN3kDRvudFJqHEuNgoOW4D4JZwzBV4lXObU4/i0hqMRq97uJuI2HkxuwHO1107hdyttkZ5qrzCDiMU7J8Lrsa/bVNXVlJWOrmYhKGZSyokaWkCSwDiwZQA29hqdysOj4K43o6ulFXxccSomyyyVLJYwXy5rluTOHBjWkNAaORcbjReiN6pOma3mrtXi8GBY1QsmxLiLs/wAJlfRCFzHUcsjWyl7mufdkd2kNf9485SBYWDjquoh7Z8IjIixbC8Ww6o7psjo3wF13X8TW7Xygxk//ADGi17hd934O2h6qispaKuhLK2lp6mPm2aNrx12I8h9Fd7HOycUYXxTQmTAq5tWY5GMeWNIylzcwBuOi2eH0fwsdnHNIdyqqTDqKjmlfR0kFM2Z5lc2JgaHOO7jbmtjE0kXKtvjSsmAW2WQB1VEBsrg4HmsMmkdAVJJw8JQUb3cq5HWdmHSytd4W26qp0Zdreyo8Y7V+wem4xxI45gVTFhuJu1lY5v3U7uptsVzPZ/2V8ccJ8XYbiWLNp5MOiErHObVF+XMwi4bfqV9EPp7jqtdiNmwho5v/AJK5ZfrYa8takU0ivM2SChBQJCEINemkmimFJmr2jzUFbTtzzMHmrB0lI02iPSy2DRfVUQRZI233tdKaSSNxAF28iu8YZYIUgWnRa01Eh5FQdJKNQSFdCjiGgglwupjqHuYAA6N7RqHcrLzuudLh8LTUvEzGfO4Cxb525heq0z2VkToKhgeDob81wnEuDS4VWOZk72CXWNzv09l4ur49/s+p/p/LJvCtJTywV7gI5G2OxBWVNQSRgvheWO5j8JWjqMOkw53xNEwh41fENneY6FbnCMbgxCHKXWeNCDuF87HXqvo5y+8VdHUlkpirI8jjoHbg+hWy+8pyJInXAFgd7BYVdEM1uRF/ZYkWISUlw67o+Y6Dqt45XC+HPKTOeY6zA8aiEZgqH5ZAfCTsfJdBSQlzviJByu3yC88dlqmZ2Hw76brruGcddVQiiq3fftFmOP4x/VfQ6fqO79cnzup6bt/bF0zSrhYrFjPRZDTuvVXgrXYrgsdYwuZ4ZBsVoqKqkw+pNPOC0grsgdVrcYwWLEYrjwSt1a4Isy+KvppxI0EG4XAdvHGR4U4FqI4JCytxImlhIOrQR43ezf1C3eG4jLh9V8FVgtcDoeRC+dftF8XN4g4zGHU8mamwqPuNDoZTq8+2g9lqM5TTyvPmei4e6wICq+VhPVDNG3tvsqwtJeTYAFd72K8HjjTjyhp5Y81DRkVlUCNMjCLN/wBTso+q8+juCTf2X1n9nLg48PcFHGqqHJW4y4TajVsDbhg99Xe4Qj1eefu25QRcrHP3MTpH7kKyOIzSlx2Ua6Iyd1CDpI8A+nNFURtdTCjldcGbNnHrqFtgfCFrsXd46Vg5SXH0We0+AeizWkmndTjFhc7lVjXTqpuNtByWUOZ1mqkEHYqchzNsq2NsSixYYy4bqt0A53KuBsEZuVkGK+LKL7LXVNT3svctOg+b+iy8TqRTwud0C5OXEX/CMlj1z3cb77q703jjt1MLM2qymssLLn+EsUdXtqI3kkxkEX87roM6m9plNXSQ0Vlg5UZrp95lVZ0tzPb5hMTnbISVXFUB8gYQbu2KvJDQiK7H5n79Oii99tAoukLzlbqVZHDbU6lAo2E6laXGBlktyLiVv3GwWixwWmj8xdZy9LPbVoQULi0SSaECQhCDWpqN00VILPwWHvq9gtewJWvW34ZP/wB4EdWFXH2V0vc3AtyVjIQWgOClJIyFuZxsq2iWUlziWtOw8l3c08sLDbKCeikYYpWZXRgeiTe7Z+Jv1UhK3qg1ZY6jqsrttweoWTiNBBi1E6nn+V3yuG7TyIVlZGyqhIDgJG6tPmqaMirpwHXBabEdCrZueVls8x5rLQOpMRqKCqd94x3s4ciPJaLiPh6oa79o4U4R1jB4mXs2Yefn5rs+0PCZHzUGJ0spjmbmgffVrwNQD+eq00FY6WIx1DckjN+YK+Ry8cwzuL7vFyXPCZxzuDcQuxeMQ1LXQ1MWha7Qg+YW3bROccxtc8xstLxBg0k9QK7DXNZWx6gONmyj909D5rI4a4rhxEPpJ2Ogq4Tlkhfo5pXOR2vmeGziBw+S3+CeR/Cf6LMzlpbLG8tc03BG4KJgyVny3vpa26zsI4SqpATLUtjjdq1lruAXTHjyt/WOWXLhjN510WA4yzE4cryGzs0e3r5hbpvrdc/ScGMgmbLHW1DJGm4LQBZdG2jdG0EyEnzC+lx92v3fI5rhveF8GMwO6n3hG4KrLHDYgoDiPmFl0cXF9qWKU2C8O1WLPGWWkjL2Ebk8h7my+LaqrlraqWeZxfLI4ve4nUkm5P1X0P8Aaj4obT0dDgMLvHUO7+UDkxu31d+i5Psq7C3cSMhxjiUy01DJ4oaRvhlnHUn8LTy5nyWmbu+Hjz33JbtYIfcWa1w8xdfd+A9nfDGCU7YaDBMOp2gcoGucfVzgSfqtk/hXBnXzYXQOvvemZr+SbiafEXZ7wrJxrxhheBt1iqJbzOH4Im6vP0FvUhfcohjpqeKmp4xHHG0Rxsbs1oFgB6BRo8Aw2heHUtBSU7miwdFC1hA5i4Czfhhmza3Gx6KbFctqSlvz2VTy0SRvJByN09Ssiem78APLrLFnpWU8T5sziGNLiLX2TcXTEqnd9Xws/cFytm06BcrHxFTtqHy9zK/Na2w0WQOLW/ho3n1eP6Llefj+3edPyX4dKw6+iL3K5scXZb3ozr//ACf8Jji1nOlf7PCz+fjvyv8ATcn06Mm6jcLnzxbGRpTvH+oKiTio65YT7uT82H2Tp8/p1LXC+pVlwQuKPEtWTdojA89UxxXWR/gjd5EFT8+H21/S5t1jrM9M8dQvPqit7rDGscTmjLmEehK6Kr4pfPE5stNuN2O/qvNeK8YNO95ZHJkdd/y/Kf8Alb/LhlPFXHhzx9x6J2btf8DPVOFu/kOX0Gn6rry45re4Wj4RpPg8AoI3CzhC0u9SLn9Vuy3NbyW44Z3dJpIuCpiwHiOgQGWtdNkXfTAn+6bv/EeirK6mZkYZXixOw6BK7p35W7cypuzVD8o0aN1eyNsbbAWREY4mxiwCkSglROqiIkZj5LSY669SwdGregWC5vFZM9a/y0Uz9LPbDSQhcWgkUJIBCSEGsundRTCimtpgNQ2mq3yOF3ZLNHmtUthg8feVB8gtY+yt850lVKHvOg1ACy2y6eI3WOPumqqSQvIAPqu7DJgmPeEHYm4WcZAxhceS1dM4d/lPqswAyXaflugA/O3vJDvsOgUoXMdcxXHpzUpGx5A0tv5BWQxktFwGMHIKoxpsNhrojFUtErM+cNPIrEq+HsHyta6hhuNiBYhbd8gYLNCwyTI+6zcZfNjUzynqtNNwZhMnjDJY+fhebLkOJuydlfUxYjhFe2nxCEgB0rDaRnNjyNx0PJenCPM21z7KbYmtGmqxeHC/Drj1PJj6rgsI4ZrqT73EO7JjHhERzAnqTZdVhEBFOHu3dqsyqAcO5aPE/fyCviiEbA0DQLWGEwmozycuXJd5ExlirXDwpBS3C05KMoUHEtOouFfYBQeAUHJ8VdmXCvGlVBWYthcctVA5rmzNJa5wabhrrfM3yK3FBw8aWcyyTB4HytDbWWxabOWQ3ZNqi3Rys5KBFnAqfJRDi+Y6KwjyUIgblWWKIjbyKpqmZqaUG9ixw/JX28lXUD/x5Tb8B/RFnt5qyGw0VghvqrRy5qei+Pp93bFdTk6JdwbrLtdLKmjuYhiI6KDmLJeFBzdN1dKoynkh0Z5mysykaoLSdimlYssJOy5niXDjUGkia3MZ6hkWnm4Bda/w3vsByVOGUgxniLDqeLKBBL8RISL2DQf5kLeE3lIznlrG13kEbYoWsA0a0BWg2bYakoqKGaA5g7MFSHOb8119aR8TbMiizG5Ktc3Zjd/0UKcktCyY47aqMmxjY2hoQ4pndRKgRSAUrJHRBGRwa0nouUqH55nu6ldHiEvd0zzfU6LmCbm6xmsJIpoXNokkykgEIQg1KaSaKazsJl7uottfmsBWQSFkrXN3BVnijqZZLtFtyoMGUXKpheJWA/8AQrHyZAb9F3ZKnkzVZIPKy3EfgYNNStBSuyztdyc6y6WNosCiURRG+d30Q+YnS1lJ77BUOu42REHF0mwIHNPwgWFldG0NFlCRg10CCcZFt1GWYN0aLuOwVEHMeattbbQoJQw5bvebvPNXLGLpW7OB9QhtS/YsF/JRWQVILFNU5p8URt1BU4qprzazh6hBeQoEBSzt5myQcxx0IRFOneaBXt2VWXxXVoItuFQOF0wdEA3QFBOLUlWWVUW7lYiHYqqq8NNKTyY79FbY3VGIOEdBUPOzYnH8lKs9uEiY1wB8k3stdYDMQYANVc2vjcLEr5G33e2rgRzKhI4t1WIKlpebHmre9BbqpssSc8nVRMguq3HkDdVvDwNFqUkXGQKBmAtsoU1LU1r8sEEkjurRoPdbil4MqZiHVM7YQeTBmP8ARdMePLL1Gc+XDD3XOYjXinge4kCw3uq+ys10uLV+MSscKawhiLhbOb3cR5DRehUHCeF0bhIYBPKNc83isfIbLYy0EUg8IEZ/hFl6+Lg7b3ZPFzdXMsbjjFgxGORuV1vdVvijmADXgKg4c8EWcD5qTaF4PzWC9Xh4mXCBE0De3RXCZvQj2WEIXtZa5JWVG3IwAm5A3UqLM7D+ID1Rdp/EPqoEhRc4DkoJOka3nf0VLn5tTcDzTc+3KyxpXuIJOyoxMTnz3aPlaPzWnWdWuswjmTqsFc8/bUBSTSWFJJNJAIQhBqE1BO6ipXTvZJMIN3hswmp2vB1tqr5n+Eg81p8FnyvkhJsQdFtZfFou+N8MotaWMB6a3W/oaxs0I1s4DULSx6t1CnEDG67SQg3jjfmgWCwWTOtrdTFUBvdVGcHKMli0qhtQx2xCkZQeaAY3KrMxVWe/NTBtzCCRBUC3+FPMTskcyITieioc8seCVfc9FTMb7orKhlDhqUnkB1wsVnrZSuOqGlrnF2iqdGL6Fw9ClmA5pgg8kVWRKx3glf8Aqptlq/8A4rbebVLw+SiT6oMiGqewHOWuN99lM138LD7rGacrdr+rVF0gGhA/9E0yyzXW1MY9nLV8SYw2nwapOUtL2d23XmdE5Z2NBJDbDUmwXF4lU1HFNb8PhjC6niv4zo1zuo6rOe9eHXixlylvponzkc1WasD5pQPK6rx7gviRlp4amzYzm7trbB1uR5ld7wXFg+JYU0Mo4WyjSVjmgua7mCvLOlvy92XVz4jg/wC0FJA7u+/YXHZocL/Rb7D8MxrEw18VG+GI7PnOS/tutvxHwVhdFWUOOxUcfeUVQ2Rwawat2P5FdqxlPWxNkZoHC4IO61/S4/Nc8usutyOXouE5Q0Gqqml3SNv8ytrTcOUMZBex0x/jOn0WdLSTw6sOcKptWWGzmkFdceDCeo8+XPyZfLLZEyFgZGxrWjk0WCkQ4jRKGpjkG4WQLWXRxYMhkjINygve9ujiCs4sa4WIUBTsGwVGsfPUxH5rhIYjNzstmadp3Cokw9jttEFMVW5+5WQ2a6wZcPew3Y4gqDZ5oTaRpt1QbTMEiVjw1DXjdXZrhERe66xp32ar32WHVO5Dmg1tW67gPdY6nK7PISNtgoLlld1uBJCFAikmUkAhCFBpgmFEJrKpJhRTCogx5gqg9ptddBFKJoxcWK0Erbi/RbGgms0Ndq3qumNStqwlvmrQQdRuqY+VjceayWBh3FiuiJRv9FdlDhsqgxo1CmxxGlggrdGQbtKGucDr+qvzDmFFxad/0QJstt7q9kl/xLHLW8iFGxbqCUGeD6J5/JYTZiOal3pPMImmXcHkqZrjloq2zFu9k3VIItlugA4AXshrtdlAOJ5WTvbkEVcD5FPOBuFQZ8vRUPqvMIjLfK0Kh0tzpcrBmrYozZ8gDv3RqfopQCqqf7pndtOmZ+/0VkVly1LImlz7MHVxWBNiE8oIo6Uyk7PcMrf6lbOmwOEPEs5dM/8AeeVsGRRRDK1oCviJtzEOET1//wCoyueD/hDwsHstjTYTDh8jXUzA0dAtw+JkjdgqDG+I9Qm12tMDJoy1zQSfJcbWYbJgGLyV1G0924XkjGx/5XZwyX9Qo1dGyojcLDXdZJdMOkxGnxajIFnh7bEFZtBTNpaSOBuzBZcjJTzYFXGWMfcuPjby9V1dBUtnjDmm99UL/DMBI0BUZIophZ7AUOKAVGWDNhjmHNTv9ioRVskDu7naWnqVsw5QmgjnbZ7QVdmyjmbILg3UyVrJKeaidmiJfH06LLp6pszR16KKvzkIzApEXCiQWoiRCqkia8bKYenog18lGGHMwkFSilPym91mOaDuqZIzfQKqhIbNWtqn6Od7BZ892xW5lairfoAOf6JRioQhcNtApJlJAkimUigSEIVGlundRTCyqd0KIKYKglvonTSmCTLy6KN1GQEgEbhaxuhv6eVr26OsstjnAdVz9HXd2QJBp1W9pi2dt43g+S7SsrhK30UhJfZyXw8ltQomBw/CqLRIfIp5/IrHLHN6hK729Sgyb+SXh6WWMZnj8KiamTogyrNBve3ui7f3vzWIah/MD6pGc9B9UGbnb++kZWD8awHVZHJqolrixpcSxrRuSg2jqpjfxqmStb1cfRctWcTgEspGvqX9W6MHv/RaWqp+LMWcTDXMpoz/AIccf6ndP8NTHft1eL8TUeFxl07xm5Rg3c70C4PE+Lcbxp7mU8poKbk2I2e4ebv6JP4O4micXuo6eqvu5sha4/W6ompa+hYficNqoLc8uYfULzct5L6j18OHFPd27vsphjqsAf3xMk9PUSRuc43Jv4he/qvQGNbG2zRZeVdkmJRDFa+gEovUMEzW88zdDp6H8l6oWabE+pXbituM28vNNZ1IygXBIVEkwJNjsVM3Hyho/NUzMfo8gkbHRdHIOq3QtzEZmje3JXxVUczdCsGcEeG+4WJC4seRqBdFboAA3BsrmPuFrY6g7ElWict1UF9bRR1kRa4C5Wloe8wqq+Hkvk/CfJb2Koa8b6quvo2VcWgGcagobZF8zbhRBINlRh8rnQBjwQ5mhur3jW4RErphyrumHBQWHxDZYUtMY395GLdQssPCCQUFUMuYWO6s3VTg1pvdAkVFjm9FDYp57hIkckDz2Sc8BQPqq3ac0FNW/wCpWmndmkPQaBbOqJaCSdT+S1DzdxKznfCwkISuuTQKRTUVQJJkpIFdCEINKmo3TWFNNJNUNNJMKAIB3U4nui2uR5GxHuoJ3Vlo2VPilbH/AHNQH/wTNv8AmFms4kmi0q8Pdb9+I5h9FoQbKbaiSP5XkLczTTqabGsMrLBszWOP4X6FZgp4pRdjmkeRXFPnZMPvoI5PO1itL/aUQuc2CKpgc0/gm0WpltNPTH0LeipfQt/6F51HxljbgWx1LrDYOaCbKR4ox+R2U1ht5MH9FvZp3clFCN3ALX1k2H0QJmqom+V7n6LkZKvFKtp7+sncOgNh+SnRYS6Z4LrknmdSoabGfH2yOy0VM5/8bxYfTdUDD6rEXh1VI545N2aPZbmhwZjCLtW3gomMIGVa0baegwOOMAlgW/pKKJgFmgK5kAYPKyvibncGD3RNr4qVmW9gtfi9AySBwyg6dFuGgNaB0WNVfegsCSpK8gqi/h3iSkxSCL+4lBeGj5mHRw+l17TA6KphjmhyvjkaHNd1BXE8Q8Pslhc8N1VvZ/j+QHAqpxEkVzTk/ibzb7bqWfTeXmbdmYiedvQKDqcG9wTfqVkhFh0U25tVWUv3Rta4WrYwg7arqXNDhYgWWBJhbHPLmOsOisqytObt1UDUSN6Eea3Rw4AdVTJhQdtdXwu2qFQ8atNlYzFKmPS4I81fJhLxssZ9BOw6ApoXxYoWm7hv0WU3FYni3Nah1NUN/CVW6Oo2FgfMJpW9+MYeai6qbyWkEdS35gD6BTD5Rof0TSabV1aG6kqP7QB62WvDpDsw362SMEr92lQbH42O9yblP41nUBa4UsnNpUvhBzzIrYisj5uCtbVRu2cFqWwRNNiD7lZDIW28IDURsMwOyg92UXuqGMy/4l/IJSyZNzcoMWul0I5n8gtbdXVM3ePIvc81Sued8rAki6RJusKd1FBKV1QyldCSAuhJCg0yYUU1lTTukEIJJ3UU0DCd1G6aBpEoJUSUDvbVc7HR948u8yugJ0KpioXNAOVdMIzWHBQMjIcR6rYU9GwvsQFa2meRayzaSgeSNbEdQusFc1C1kBICz8KosrMxG5V81G+0bCPC5wutjDTd0bcgrpNlGwXWQG6jyCGxBoHUqVkQiS5ob1Kyae0ZuVWxlyrchuguc/NzQ1oCrEZvupAEKCmsibIwtIuuBxzDDTVgqoC6ORhzBzdCD1XoTxnK5/HKYPB0Wosumx4Y4lZjUBilIZVxAZ2/vD94LeZl45UVE+EV0dXTOLZInBwtz8j5Fes4ViMWK4fBWQkZJmBwHTqPZZsLGXc+aRumjRRlHMUZiUOUQUEr3SLWncIundBHuW9AoPo4pNwFbmRdBj/Axjkn8FH+6FkXSzJsUiljH4Qn8MzoFYXgblVS1kMIvJI1o8zZUHwrOiRpGdFrani3B6W4kr4LjkHArXTdoGGt/uhLL/lYi6rfvw+N2+ipOHQs1LyB6rQQcZTV8pjhpjG0C5c8/wAlOSvqJfmk+izctLqtpK+GIWiAJ/ecdAtTVVD5Ltjfa+77b+ipdI558TifVJZua6RYwRiwJPUnmpJIWFCRKaRVCSugpFQF0IQgEIQqNImkhZVJNRCd0DTUQmoJIuopoGolSSVEdluaZgdTMe2zhbUdFpyFdT1Tqc2uS07hbwy0zY3rIYnC9husmLuw7l0C0zMQaxpJcLb3WHNjeVwMZzLrtNOw75rhawICefVcnT8RS5vEG2v9Qt3SYjFUhpa4Ankkppsu812Szm2yYizXyuujuXWKqLIpQDqrhMLhY3dO3TALTqgzGygp94LKhmpUgL81BcwtLbc1g4hT94w2WSBbmoSG4IKsHCY1h1y64Wy7PsTNOZ8LkdZo+9jv/uH81mYtA1zSbLk2VLsLxaGpYDZj/EBzHNK17j1bv230zO9Eu/8AJo9SuUk4qg0DXZiOQuVQ7iSoebQ0dQ/z0aFNM6diZ7j5r+gVTpyOZIXHuxnFJDYUrG3/AHnkpuxDHA0kGGNo55bq6XTrxUgblP4xg/EFwclTjVSdKxzB5MAVX7LxOp/va6pcP85H6Jo07yXFqeAXlmjYP4nALXVHG2EU1watjz0Z4j+S5WPhDvDeTM89XG/6rMh4SjY3VoFk0ajPm7RKYaU9JUSnzGUfmsCo45xWo0p6SGEdXEuKy4+HI2W8IVv7FY1vyhNL4c7VYtjlS0mStkbflGA1aaejqalxM0ssp/jcSu5OEB52TjwVpJ8IV1DbhGYMbaM1ut3S4P8AdNJauniwVmbUBZM9KymgJsAAl0baGjpm0zDYauKyEk157VCSEKAQhCASTQVREpWUkkCsiyaECQgoQaJCELKmmop3QO6aSaB3TuophA00k0CKRUrLFxGtpsMopq2smZBTQML5JHnRoCDmncb4Y3ibE8Eq6yGlfSZHNMjsokBaC61+YP5FbykrcLqWNfDUwytcAczHh36L5Y474gj4k4qxHFYInsgnlvG1w1DQAAT0Jte3mtJTVs9I4PgmfG69wWOLSPpZdZXPb7RZBDM27SNTopiili8cUhBB01XylhfanxVhWRsWLTyMYdGT+Mfnr+a7rA/tD1MUJgxeg7wkeGWndYg+bT/VXwu30HQ4/U0LwyrBLD+Icl0tPicEsbX525XDQ3XjWA9sPDOPsbEapsUrgAY5xkdfyvuuvwvEqVsjWiVktHNpv8hP8lZR6G1zHtuCCEi0FcpS4hJhVeaCV5MbxmicTuFuW4mLaG5Wk02IFigvDXbrBpcTjqXmPVrxyKsllDL3KDJdKAd1jTVIvuFr6iqdchrre6xWtke+4df3V0Muod3hI3WEcIZO65aFsIIHfiNyr2gM33QYdFg8LXXyDRWzd2H9zC0XGhICvc97/uYfmduegUjS/CQF+UnqUghT0UbfmF3FZQpI5BZwGQfmVi0tTncbmzWjU9FVPjMTXEuOWNujB180Gybh0I2aFJtJGzkAtI3H5ZD9zE8+ytZX1T9ZQWjooraSyw07CSRotFXYoZZA13hj5DqpyySVcgijBcdyeQVWI4RK+AOaLuaOSoz6OtAa0ZrhbFpZIxcD+0ZaNxa4OIG4K2eH8WUzSGSuLT5qGnYRQg3QIg0kLHw7E6ersYpWOvyBTrcVpaI/fStDzoGg+I+ybRltYByWrxub7tsY5u1Vc2PPbbLGxl9bPPiI9Bsudw3ivD+KTVSYZXR1cVPMYZHR3yh45X5+o0UyvgkZyEkLg2aEroQNCSEBdCEKhJpIQCSaSBIQhBok0kLKmhAQgYTuop3QSTCjdNBJNRTQNeD9v3FdU/GIuHqapeykhhbJUxNPhke43bfrYW9yvd7r5c7WYp/7fYw6e+Z02ZhH7mUWI9lrFMnFvJvf6X1H1UCHW5n81N3MjU8y3Q/RQJBPK/noVpzQvbT9Er2P/Qpm4Gu3mLpWB2/LVAxIW21+q3uDccY3gZApK+ZsY/w3nMw+x/kueynkQlct5FB7nhX2ghUUVDBjFI/4mlf/APmITcPZbYtOt16Vwx2p4HjkjG09fGZCLGN5yu+hXyDn9lZHUyRuBa4gjZamS7fcmI4iyniZiVPJrCR3g6tO62zsRbUU7J43BzXNuvjbh/tY4kwOI0xrDVUzm5DDUjOLHodx9V3dD2/V9BRU0EWG05ayMB/eSOJPpbZbmUH0ZAwzuLiOSzKdjGyEWXgeH/aYbFcVOAAnUDuqi36hbOH7SmEuN5MGrWc9JWFXuiPcjI1p0Kx5aoMcXHYBeUU3b9w/WEZoa6A6aOYHD8itvF2m8NVlHLXOxyjpooRmc2YkPceTQ3cnRWao9EhkdAA75pH6n+inNjzKSnd8UGgW67ryPGftB8LUNORh81TWzkbtiLWj3dZef13bw2qndJJRzzWOjTIGgfS6bg94qsfkqmkQx91AP9yuoYZqoB8nyjYFfPjftAzQus3B4pGD8Mkzj+gWNiv2i+JasZKOGioGchGwuP1JUuUV9NOq4aIeMsbZaiv4xoYXWdM0noDcr5Xre1viauJM1a11+Rbp9LrVVHH3EVQws/ak0bDyhsz9BdZ7lfW7e0PD6GEEQygHUvc3KD7lYFR248M0bi2sroYSPw5g4/kvj2pxKsrDmqamaY9ZJC79SsYyHr9FnuNvqPibtx4Kki7+hqpZalh/u2wutIOl7WC8/wCIu3ltUO7wvD3RNtq54be/uSvGy4nqlm0tcJcrU29Ope3LEKOMWopppBqXvqso+jWpu+0HxEyTvKbDsPilvfO8vkd+ZXl1v+2TAtz/ADU3Tdd7ivbLxnjsMsFXivdQzAteynjbEHA7i41sva/s+zMk4Gla2MNeytkDiPxXa0j8l8uw6a2sOu35r6R+zhXMm4bxSjDQHQ1bZL9Q5n/+VmrHrqaSFlo0JIQO6EkIGgpIVAhCECuhBSQF0IQg/9k=">
           <div class="about-header-text">
-            <div class="about-name">최광열 <span>대표</span></div>
-            <div class="about-titles">
+            <div class="about-name"><span class="ko">최광열 <span>대표</span></span><span class="en">Kwangyeol Choi <span>Founder</span></span></div>
+            <div class="about-titles"><span class="ko">
               태권도 공인 7단<br>
               충의태권도 대표 관장<br>
               대한태권도협회(KTA) 교육강사<br>
               자유품새 선수부 감독
-            </div>
+            </span><span class="en">
+              7th dan black belt (Kukkiwon)<br>
+              Head Master, Chungui Taekwondo<br>
+              Education instructor, Korea Taekwondo Association (KTA)<br>
+              Head coach, freestyle poomsae team
+            </span></div>
           </div>
         </div>
         <div class="about-story">
-          <p>유소년 시절, 저는 시범 무대 위에 있었습니다. 격파가 터지는 찰나의 완성도를 위해 같은 동작을 수백 번씩 반복하던 시간이었습니다. 이후 품새의 길로 들어서면서 배운 것은, 결국 무도의 성장은 <b>자기 동작을 스스로 보는 눈</b>에서 갈린다는 사실이었습니다.</p>
-          <p>지금은 자유품새 선수를 키우는 감독으로, 그리고 대한태권도협회 교육강사로 전국의 지도자들을 만나며 같은 장면을 반복해서 봅니다. 선수에게 "방금 그 동작, 어땠어?"라고 물으면 대부분 자기 모습을 모릅니다. 몸이 기억하는 감각과 실제 보이는 동작 사이의 간격 — 그 간격을 줄여주는 것이 지도자의 일입니다.</p>
-          <p class="about-quote">"촬영하고, 멈추고, 돌려보는 사이에 훈련의 흐름은 끊긴다. 그렇다면 흐름을 끊지 않는 거울을 만들자."</p>
-          <p><b>리플레이 미러</b>는 그렇게 태어났습니다. 버튼을 누르지 않아도 촬영과 슬로우 재생이 스스로 반복되고, 선수는 동작을 마친 그 호흡 그대로 자신의 움직임을 마주합니다. 태권도 품새와 시범에서 출발했지만, 골프 스윙이든 야구 타격이든 무용이든 — <b>자신의 동작을 보아야 성장하는 모든 종목의 선수들</b>에게 도움이 되기를 바랍니다.</p>
+          <p class="ko">유소년 시절, 저는 시범 무대 위에 있었습니다. 격파가 터지는 찰나의 완성도를 위해 같은 동작을 수백 번씩 반복하던 시간이었습니다. 이후 품새의 길로 들어서면서 배운 것은, 결국 무도의 성장은 <b>자기 동작을 스스로 보는 눈</b>에서 갈린다는 사실이었습니다.</p><p class="en">As a young athlete I stood on demonstration stages, repeating the same technique hundreds of times for the split-second perfection of a breaking board. Later, walking the path of poomsae, I learned that growth in martial arts ultimately comes down to <b>the eye that sees your own movement</b>.</p>
+          <p class="ko">지금은 자유품새 선수를 키우는 감독으로, 그리고 대한태권도협회 교육강사로 전국의 지도자들을 만나며 같은 장면을 반복해서 봅니다. 선수에게 "방금 그 동작, 어땠어?"라고 물으면 대부분 자기 모습을 모릅니다. 몸이 기억하는 감각과 실제 보이는 동작 사이의 간격 — 그 간격을 줄여주는 것이 지도자의 일입니다.</p><p class="en">Today, as a freestyle poomsae head coach and an education instructor for the Korea Taekwondo Association, I meet coaches all over the country and keep seeing the same scene: ask an athlete "how was that?" and most have no idea what they looked like. The gap between what the body feels and what actually shows — closing that gap is a coach's job.</p>
+          <p class="about-quote ko">"촬영하고, 멈추고, 돌려보는 사이에 훈련의 흐름은 끊긴다. 그렇다면 흐름을 끊지 않는 거울을 만들자."</p><p class="about-quote en">"Between filming, stopping and scrubbing back, the flow of training breaks. So let's build a mirror that never breaks the flow."</p>
+          <p class="ko"><b>리플레이 미러</b>는 그렇게 태어났습니다. 버튼을 누르지 않아도 촬영과 슬로우 재생이 스스로 반복되고, 선수는 동작을 마친 그 호흡 그대로 자신의 움직임을 마주합니다. 태권도 품새와 시범에서 출발했지만, 골프 스윙이든 야구 타격이든 무용이든 — <b>자신의 동작을 보아야 성장하는 모든 종목의 선수들</b>에게 도움이 되기를 바랍니다.</p><p class="en">That is how <b>Replay Mirror</b> was born. Recording and slow replay repeat on their own — no buttons — and athletes face their own movement in the very breath after finishing it. It began with taekwondo poomsae and demonstration, but whether it is a golf swing, a baseball swing or dance — I hope it helps <b>every athlete in every sport that grows by seeing one's own movement</b>.</p>
         </div>
       </div>
     </div>
 
     <div class="help-section" id="secFeedback">
-      <div class="help-head">의견 보내기</div>
+      <div class="help-head"><span class="ko">의견 보내기</span><span class="en">Send feedback</span></div>
       <div class="fb-form">
         <div class="fb-types">
           <button class="fb-type sel">오류 신고</button>
@@ -1314,26 +1347,95 @@
         </div>
         <textarea id="fbText" placeholder="발견한 오류, 있었으면 하는 기능, 사용 소감 등을 자유롭게 적어주세요. 오류라면 사용 기기(예: 아이패드, 갤럭시탭)와 상황을 함께 적어주시면 큰 도움이 됩니다."></textarea>
         <div class="fb-actions">
-          <button id="fbCopy">내용 복사</button>
-          <button id="fbMail">이메일로 보내기</button>
+          <button id="fbCopy"><span class="ko">내용 복사</span><span class="en">Copy text</span></button>
+          <button id="fbMail"><span class="ko">이메일로 보내기</span><span class="en">Send by email</span></button>
         </div>
-        <div class="fb-note">보내주신 의견은 다음 업데이트에 소중히 반영됩니다.<br>이메일이 어려우시면 "내용 복사" 후 카카오톡으로 보내주셔도 됩니다.</div>
+        <div class="fb-note"><span class="ko">보내주신 의견은 다음 업데이트에 소중히 반영됩니다.<br>이메일이 어려우시면 "내용 복사" 후 카카오톡으로 보내주셔도 됩니다.</span><span class="en">Your feedback shapes the next update.<br>If email is inconvenient, use "Copy text" and send it through any messenger.</span></div>
       </div>
     </div>
   </div>
-  <button id="closeHelp">닫기</button>
+  <button id="closeHelp"><span class="ko">닫기</span><span class="en">Close</span></button>
 </div>
 
 <!-- 에러 -->
 <div id="errBox">
   <div class="err-card">
-    <b>카메라를 열 수 없습니다</b>
+    <b><span class="ko">카메라를 열 수 없습니다</span><span class="en">Can't open the camera</span></b>
     <span id="errMsg"></span>
   </div>
 </div>
 
 <script>
 (() => {
+
+  // ===== 언어 =====
+  const LANG = window.RM_LANG || 'ko';
+  const KO = LANG !== 'en';
+  const T = KO ? {
+    sec: v => v + '초',
+    none: '없음',
+    speedX: v => v + '배속',
+    modeManual: '수동 (번호 버튼)', modeAuto: '자동 (1→4 순환)',
+    phaseRec: '촬영 중', phaseWait: '대기', phasePlay: s => '슬로우 재생 ' + s + '배속',
+    pause: '일시정지', resume: '재생',
+    liveNow: '지금',
+    noPending: '아직 담을 영상이 없습니다. 촬영이 끝난 뒤 눌러주세요',
+    slotAssigned: n => n + '번 화면에 담았습니다',
+    swipePinned: (n, c) => n + '번 · 영상 ' + c + ' 고정',
+    menuTitle: (n, c) => n + '번 화면 · 영상 ' + c + '개',
+    clipLatest: '영상 1 (최신)', clipN: n => '영상 ' + n,
+    pin: '고정', pinned: '고정 중', save: '저장',
+    pinOnToast: '이 영상만 반복 재생합니다', pinOffToast: '고정을 해제했습니다. 전체 영상을 순환합니다',
+    clipSaved: '영상이 저장되었습니다', lastSaved: '최근 영상이 저장되었습니다',
+    coachLocked: '코칭 문구는 유료 앱에서 사용할 수 있습니다',
+    coachPlaceholder: '화면에 크게 띄울 문구를 입력하세요',
+    coachPresets: ['시선은 정면!', '무릎 더 높이', '기합 크게!', '중심 유지', '천천히 정확하게', '마지막 자세 3초 유지'],
+    camFallback: n => '카메라 ' + n,
+    noCams: '사용 가능한 카메라를 찾지 못했습니다.',
+    camReconnect: '카메라 연결이 끊겨 다시 연결합니다',
+    errPerm: '브라우저의 카메라 권한을 허용해 주세요. 주소창의 자물쇠 아이콘에서 권한을 변경할 수 있습니다.',
+    errHttps: '이 페이지는 HTTPS 주소 또는 localhost에서만 카메라를 사용할 수 있습니다.',
+    errNoRecorder: '이 브라우저는 영상 녹화 기능을 지원하지 않습니다. 최신 버전의 Chrome 또는 Safari로 접속해 주세요.',
+    fbTypes: ['오류 신고', '기능 제안', '기타 의견'],
+    fbPlaceholder: '발견한 오류, 있었으면 하는 기능, 사용 소감 등을 자유롭게 적어주세요. 오류라면 사용 기기(예: 아이패드, 갤럭시탭)와 상황을 함께 적어주시면 큰 도움이 됩니다.',
+    fbSubjectTag: '[리플레이 미러]', fbBodyTag: '[리플레이 미러 의견]', fbDevice: '기기 정보: ',
+    fbEmpty: '내용을 먼저 적어주세요',
+    fbCopied: '복사되었습니다. 카카오톡 등에 붙여넣어 보내주세요',
+    fbCopyFail: '복사에 실패했습니다. 직접 선택해 복사해주세요',
+    langBtn: 'English'
+  } : {
+    sec: v => v + 's',
+    none: 'None',
+    speedX: v => v + 'x',
+    modeManual: 'Manual (number buttons)', modeAuto: 'Auto (1→4 rotation)',
+    phaseRec: 'Recording', phaseWait: 'Standby', phasePlay: s => 'Slow replay ' + s + 'x',
+    pause: 'Pause', resume: 'Resume',
+    liveNow: 'LIVE',
+    noPending: 'No clip to assign yet. Press after a recording ends',
+    slotAssigned: n => 'Added to screen ' + n,
+    swipePinned: (n, c) => 'Screen ' + n + ' · clip ' + c + ' pinned',
+    menuTitle: (n, c) => 'Screen ' + n + ' · ' + c + (c > 1 ? ' clips' : ' clip'),
+    clipLatest: 'Clip 1 (latest)', clipN: n => 'Clip ' + n,
+    pin: 'Pin', pinned: 'Pinned', save: 'Save',
+    pinOnToast: 'Looping this clip only', pinOffToast: 'Unpinned. Cycling through all clips',
+    clipSaved: 'Clip saved', lastSaved: 'Latest clip saved',
+    coachLocked: 'Coaching notes are available in the paid app',
+    coachPlaceholder: 'Enter a phrase to display large on screen',
+    coachPresets: ['Eyes forward!', 'Knees higher', 'Louder kihap!', 'Keep your balance', 'Slow and precise', 'Hold the last pose 3s'],
+    camFallback: n => 'Camera ' + n,
+    noCams: 'No available cameras found.',
+    camReconnect: 'Camera disconnected — reconnecting',
+    errPerm: 'Please allow camera access in your browser. You can change it via the lock icon in the address bar.',
+    errHttps: 'The camera works only over HTTPS or on localhost.',
+    errNoRecorder: 'This browser does not support video recording. Please use the latest version of Chrome or Safari.',
+    fbTypes: ['Bug report', 'Feature request', 'Other'],
+    fbPlaceholder: 'Tell us about bugs, features you wish existed, or how you use the app. For bugs, please include your device (e.g. iPad, Galaxy Tab) and what happened.',
+    fbSubjectTag: '[Replay Mirror]', fbBodyTag: '[Replay Mirror feedback]', fbDevice: 'Device: ',
+    fbEmpty: 'Please write something first',
+    fbCopied: 'Copied. Paste it into any messenger or email',
+    fbCopyFail: 'Copy failed. Please select and copy the text manually',
+    langBtn: '한국어'
+  };
 
   // 화질 프리셋: 카메라 요청 해상도 / 버퍼 해상도 / 저장 비트레이트
   const QUALITY = {
@@ -1387,7 +1489,7 @@
   }
 
   function assignToSlot(i) {
-    if (!pending) { showToast('아직 담을 영상이 없습니다. 촬영이 끝난 뒤 눌러주세요'); return; }
+    if (!pending) { showToast(T.noPending); return; }
     const s = slots[i];
     const clip = { blob: pending.blob, ext: pending.ext, url: URL.createObjectURL(pending.blob) };
     s.clips.unshift(clip);
@@ -1407,7 +1509,7 @@
     }
     updateSlotUI(i);
     playSlot(i, s.pinned || s.clips[0]);
-    showToast((i + 1) + '번 화면에 담았습니다');
+    showToast(T.slotAssigned(i + 1));
   }
 
   function updateSlotUI(i) {
@@ -1549,9 +1651,9 @@
     }
     sliders.forEach(s => s.addEventListener('input', () => update(+s.value)));
   }
-  bindSetting(['recSlider','recSlider2'], ['recVal','recVal2'], v => v + '초', v => recSec = v);
-  bindSetting(['waitSlider','waitSlider2'], ['waitVal','waitVal2'], v => v === 0 ? '없음' : v + '초', v => waitSec = v);
-  bindSetting(['speedSlider','speedSlider2'], ['speedVal','speedVal2'], v => (v/100) + '배속', v => {
+  bindSetting(['recSlider','recSlider2'], ['recVal','recVal2'], v => T.sec(v), v => recSec = v);
+  bindSetting(['waitSlider','waitSlider2'], ['waitVal','waitVal2'], v => v === 0 ? T.none : T.sec(v), v => waitSec = v);
+  bindSetting(['speedSlider','speedSlider2'], ['speedVal','speedVal2'], v => T.speedX(v/100), v => {
     speed = v/100;
     slotVideos.forEach(vd => { if (vd.src) vd.playbackRate = speed; });  // 우측 화면 즉시 반영
   });
@@ -1559,7 +1661,7 @@
     if (quality !== v) { quality = v; reopenNeeded = true; }
   });
   bindSetting(['modeSlider','modeSlider2'], ['modeVal','modeVal2'],
-    v => v === 1 ? '수동 (번호 버튼)' : '자동 (1→4 순환)',
+    v => v === 1 ? T.modeManual : T.modeAuto,
     v => {
       assignMode = v;
       $('assignBar').style.display = v === 2 ? 'none' : '';   // 자동 모드에선 번호 버튼 숨김
@@ -1574,7 +1676,7 @@
     // 코칭 문구: 정식 앱 전용 (기존 클릭 동작보다 먼저 가로챔)
     $('coachBtn').addEventListener('click', e => {
       e.stopImmediatePropagation();
-      showToast('코칭 문구는 유료 앱에서 사용할 수 있습니다');
+      showToast(T.coachLocked);
     }, true);
   }
 
@@ -1589,8 +1691,7 @@
       stream = await navigator.mediaDevices.getUserMedia({ video: videoConstraints, audio: false });
     } catch (e) {
       $('errMsg').textContent = (location.protocol === 'https:' || location.hostname === 'localhost')
-        ? '브라우저의 카메라 권한을 허용해 주세요. 주소창의 자물쇠 아이콘에서 권한을 변경할 수 있습니다.'
-        : '이 페이지는 HTTPS 주소 또는 localhost에서만 카메라를 사용할 수 있습니다.';
+        ? T.errPerm : T.errHttps;
       $('errBox').classList.add('on');
       return false;
     }
@@ -1603,7 +1704,7 @@
     if (track) track.onended = () => {
       if (!running) return;
       currentDeviceId = null;
-      showToast('카메라 연결이 끊겨 다시 연결합니다');
+      showToast(T.camReconnect);
       openCamera();
     };
     return true;
@@ -1619,13 +1720,13 @@
         .filter(d => d.kind === 'videoinput');
     } catch (e) {}
     if (!devices.length) {
-      list.innerHTML = '<div style="font-size:13px;color:var(--text-dim);">사용 가능한 카메라를 찾지 못했습니다.</div>';
+      list.innerHTML = '<div style="font-size:13px;color:var(--text-dim);">' + T.noCams + '</div>';
       return;
     }
     devices.forEach((d, i) => {
       const btn = document.createElement('button');
       btn.className = 'cam-item' + (d.deviceId === currentDeviceId ? ' selected' : '');
-      btn.textContent = d.label || ('카메라 ' + (i + 1));
+      btn.textContent = d.label || T.camFallback(i + 1);
       btn.addEventListener('click', async () => {
         currentDeviceId = d.deviceId;
         await openCamera();
@@ -1639,9 +1740,9 @@
   function setPhaseUI(name, timeText) {
     const badge = $('phaseBadge');
     badge.classList.remove('rec', 'play');
-    if (name === 'rec') { badge.classList.add('rec'); $('phaseText').textContent = '촬영 중'; }
-    else if (name === 'play') { badge.classList.add('play'); $('phaseText').textContent = '슬로우 재생 ' + speed + '배속'; }
-    else { $('phaseText').textContent = '대기'; }
+    if (name === 'rec') { badge.classList.add('rec'); $('phaseText').textContent = T.phaseRec; }
+    else if (name === 'play') { badge.classList.add('play'); $('phaseText').textContent = T.phasePlay(speed); }
+    else { $('phaseText').textContent = T.phaseWait; }
     $('phaseTime').textContent = timeText || '';
   }
 
@@ -1718,7 +1819,7 @@
     ctx.fillStyle = '#F5F7FC';
     ctx.font = `800 ${10.5 * dpr}px SUIT, sans-serif`;
     ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-    ctx.fillText('지금', x + 23 * dpr, y + 6 * dpr + bh / 2 + dpr);
+    ctx.fillText(T.liveNow, x + 23 * dpr, y + 6 * dpr + bh / 2 + dpr);
     ctx.restore();
   }
 
@@ -1749,7 +1850,7 @@
       slotVideos.forEach(v => { if (v.src) v.pause(); });
       if (phase === 'play') playVideo.pause();
       btn.classList.add('freeze-active');
-      btn.lastChild.textContent = '재생';
+      btn.lastChild.textContent = T.resume;
       $('pausedTag').classList.add('on');
     } else {
       pausedTotal += performance.now() - pauseStart;
@@ -1757,7 +1858,7 @@
       slotVideos.forEach(v => { if (v.src) v.play().catch(() => {}); });
       if (phase === 'play') playVideo.play().catch(() => {});
       btn.classList.remove('freeze-active');
-      btn.lastChild.textContent = '일시정지';
+      btn.lastChild.textContent = T.pause;
       $('pausedTag').classList.remove('on');
     }
   }
@@ -1888,7 +1989,7 @@
   // ---- UI ----
   $('startBtn').addEventListener('click', async () => {
     if (!window.MediaRecorder) {
-      $('errMsg').textContent = '이 브라우저는 영상 녹화 기능을 지원하지 않습니다. 최신 버전의 Chrome 또는 Safari로 접속해 주세요.';
+      $('errMsg').textContent = T.errNoRecorder;
       $('errBox').classList.add('on');
       return;
     }
@@ -1940,7 +2041,7 @@
   });
 
   $('saveBtn').addEventListener('click', () => {
-    if (downloadBlob(lastBlob, lastExt)) showToast('최근 영상이 저장되었습니다');
+    if (downloadBlob(lastBlob, lastExt)) showToast(T.lastSaved);
   });
 
   // ---- 슬롯 초기화 및 이벤트 ----
@@ -1968,7 +2069,7 @@
         s.pinned = s.clips[next];                    // 넘겨본 영상을 고정
         updateSlotUI(i);
         playSlot(i, s.pinned);
-        showToast((i + 1) + '번 · 영상 ' + (next + 1) + ' 고정');
+        showToast(T.swipePinned(i + 1, next + 1));
       } else if (Math.abs(dx) < 12 && Math.abs(dy) < 12) {
         openSlotMenu(i);                             // 탭
       }
@@ -1985,7 +2086,7 @@
     const s = slots[i];
     if (!s.clips.length) return;
     menuSlot = i;
-    $('slotMenuTitle').textContent = (i + 1) + '번 화면 · 영상 ' + s.clips.length + '개';
+    $('slotMenuTitle').textContent = T.menuTitle(i + 1, s.clips.length);
     const list = $('slotMenuList');
     list.innerHTML = '';
     s.clips.forEach((c, idx) => {
@@ -1993,24 +2094,24 @@
       row.className = 'slot-menu-row';
       const label = document.createElement('span');
       label.className = 'slot-menu-label';
-      label.textContent = idx === 0 ? '영상 1 (최신)' : '영상 ' + (idx + 1);
+      label.textContent = idx === 0 ? T.clipLatest : T.clipN(idx + 1);
       const pinBtn = document.createElement('button');
       pinBtn.className = 'slot-menu-btn' + (s.pinned === c ? ' pinned' : '');
-      pinBtn.textContent = s.pinned === c ? '고정 중' : '고정';
+      pinBtn.textContent = s.pinned === c ? T.pinned : T.pin;
       pinBtn.addEventListener('click', e => {
         e.stopPropagation();
         s.pinned = (s.pinned === c) ? null : c;   // 다시 누르면 고정 해제
         updateSlotUI(i);
         playSlot(i, s.pinned || s.clips[s.cur] || s.clips[0]);
         openSlotMenu(i); // 표시 갱신
-        showToast(s.pinned ? '이 영상만 반복 재생합니다' : '고정을 해제했습니다. 전체 영상을 순환합니다');
+        showToast(s.pinned ? T.pinOnToast : T.pinOffToast);
       });
       const saveBtn2 = document.createElement('button');
       saveBtn2.className = 'slot-menu-btn save';
-      saveBtn2.textContent = '저장';
+      saveBtn2.textContent = T.save;
       saveBtn2.addEventListener('click', e => {
         e.stopPropagation();
-        if (downloadBlob(c.blob, c.ext)) showToast('영상이 저장되었습니다');
+        if (downloadBlob(c.blob, c.ext)) showToast(T.clipSaved);
       });
       row.append(label, pinBtn, saveBtn2);
       list.appendChild(row);
@@ -2065,7 +2166,7 @@
 
   // 의견 보내기
   const FEEDBACK_EMAIL = 'chungui.tkd@gmail.com';   // ※ 실제 수신 이메일로 교체하세요
-  let fbType = '오류 신고';
+  let fbType = T.fbTypes[0];
   document.querySelectorAll('.fb-type').forEach(b => {
     b.addEventListener('click', () => {
       document.querySelectorAll('.fb-type').forEach(x => x.classList.remove('sel'));
@@ -2074,19 +2175,19 @@
     });
   });
   function fbBody() {
-    return '[리플레이 미러 의견] ' + fbType + '\n\n' + $('fbText').value.trim()
-      + '\n\n---\n기기 정보: ' + navigator.userAgent;
+    return T.fbBodyTag + ' ' + fbType + '\n\n' + $('fbText').value.trim()
+      + '\n\n---\n' + T.fbDevice + navigator.userAgent;
   }
   $('fbCopy').addEventListener('click', async () => {
-    if (!$('fbText').value.trim()) { showToast('내용을 먼저 적어주세요'); return; }
+    if (!$('fbText').value.trim()) { showToast(T.fbEmpty); return; }
     try {
       await navigator.clipboard.writeText(fbBody());
-      showToast('복사되었습니다. 카카오톡 등에 붙여넣어 보내주세요');
-    } catch (e) { showToast('복사에 실패했습니다. 직접 선택해 복사해주세요'); }
+      showToast(T.fbCopied);
+    } catch (e) { showToast(T.fbCopyFail); }
   });
   $('fbMail').addEventListener('click', () => {
-    if (!$('fbText').value.trim()) { showToast('내용을 먼저 적어주세요'); return; }
-    const subject = encodeURIComponent('[리플레이 미러] ' + fbType);
+    if (!$('fbText').value.trim()) { showToast(T.fbEmpty); return; }
+    const subject = encodeURIComponent(T.fbSubjectTag + ' ' + fbType);
     const body = encodeURIComponent(fbBody());
     location.href = 'mailto:' + FEEDBACK_EMAIL + '?subject=' + subject + '&body=' + body;
   });
@@ -2110,6 +2211,23 @@
   $('fbLink').addEventListener('click', () => openHelp('secFeedback'));
   $('helpBtn').addEventListener('click', () => openHelp());
   $('closeHelp').addEventListener('click', () => $('helpOverlay').classList.remove('on'));
+
+  // ---- 언어 초기 적용 ----
+  $('langBtn').textContent = T.langBtn;
+  $('langBtn').addEventListener('click', () => {
+    try { localStorage.setItem('rm-lang', KO ? 'en' : 'ko'); } catch (e) {}
+    location.reload();
+  });
+  $('recVal').textContent = $('recVal2').textContent = T.sec(recSec);
+  $('waitVal').textContent = $('waitVal2').textContent = waitSec === 0 ? T.none : T.sec(waitSec);
+  $('speedVal').textContent = $('speedVal2').textContent = T.speedX(speed);
+  $('modeVal').textContent = $('modeVal2').textContent = assignMode === 1 ? T.modeManual : T.modeAuto;
+  $('phaseText').textContent = T.phaseRec;
+  $('coachInput').placeholder = T.coachPlaceholder;
+  document.querySelectorAll('.coach-preset').forEach((b, i) => b.textContent = T.coachPresets[i]);
+  document.querySelectorAll('.fb-type').forEach((b, i) => b.textContent = T.fbTypes[i]);
+  $('fbText').placeholder = T.fbPlaceholder;
+  $('pauseBtn').append(T.pause);
 
   // 일시정지 (버튼 또는 큰 화면 두 번 탭)
   $('pauseBtn').addEventListener('click', togglePause);
