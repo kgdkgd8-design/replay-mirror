@@ -484,6 +484,23 @@
     animation: blink 1s infinite;
   }
 
+  /* 재생 스크럽 바 (슬로우 재생 중 앞뒤 탐색) */
+  #scrubBar {
+    position: absolute;
+    left: 16px; right: 16px;
+    bottom: calc(max(12px, env(safe-area-inset-bottom)) + 96px);
+    display: none;
+    z-index: 11;
+    background: rgba(11, 15, 26, 0.6);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 12px 18px;
+    backdrop-filter: blur(6px);
+  }
+  #scrubBar.on { display: block; }
+  #app.has-history #scrubBar { right: calc(25% + 16px); }
+  #scrub { display: block; }
+
   /* 하단 컨트롤 */
   #controls {
     position: absolute;
@@ -948,7 +965,7 @@
         <span class="setup-label"><span class="ko">촬영 시간</span><span class="en">Recording time</span></span>
         <span class="setup-val" id="recVal">10초</span>
       </div>
-      <input type="range" id="recSlider" min="3" max="30" step="1" value="10">
+      <input type="range" id="recSlider" min="0" max="34" step="1" value="7">
     </div>
     <div class="setup-row">
       <div class="setup-head">
@@ -1001,6 +1018,8 @@
     <div id="cdNum">3</div>
     <div id="cdLabel"><span class="ko">잠시 후 슬로우 재생이 시작됩니다</span><span class="en">Slow replay starts in a moment</span></div>
   </div>
+
+  <div id="scrubBar"><input type="range" id="scrub" min="0" max="1000" step="1" value="0"></div>
 
   <div id="nextPrep"><span id="npNum">5</span><span class="np-label"><span class="ko">다음 촬영<br>준비해주세요</span><span class="en">Get ready for<br>the next take</span></span></div>
 
@@ -1109,7 +1128,7 @@
         <span class="setup-label"><span class="ko">촬영 시간</span><span class="en">Recording time</span></span>
         <span class="setup-val" id="recVal2">10초</span>
       </div>
-      <input type="range" id="recSlider2" min="3" max="30" step="1" value="10">
+      <input type="range" id="recSlider2" min="0" max="34" step="1" value="7">
     </div>
     <div class="setup-row">
       <div class="setup-head">
@@ -1191,7 +1210,7 @@
         <div class="help-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
         <div class="help-body">
           <b><span class="ko">촬영 시간 · 대기 카운트 · 재생 속도</span><span class="en">Recording time · wait countdown · playback speed</span></b>
-          <span><span class="ko">촬영 시간(3~30초)은 한 번에 찍는 길이입니다. 발차기 한 동작이면 5~8초, 품새 한 장이면 15~30초처럼 연습 단위에 맞추세요. 대기 카운트(0~10초)는 촬영이 끝나고 화면 앞으로 걸어올 시간으로, 카메라와 거리가 멀수록 길게 잡으면 됩니다. 재생 속도(0.25~1배속)는 슬로우 정도입니다. 0.5배속이면 10초 영상이 20초 동안 나와 발끝·시선·중심 이동까지 하나하나 보이고, 회전이나 점프처럼 빠른 기술은 0.25배속이 좋습니다.</span><span class="en">Recording time (3–30s) is the length of one take — match it to your practice unit: 5–8s for a single kick, 15–30s for a poomsae chapter. Wait countdown (0–10s) is walking time from the camera spot to the screen; set it longer when the camera is far away. Playback speed (0.25–1x) controls the slow motion: at 0.5x a 10-second clip plays for 20 seconds — slow enough to check foot position, eye line and weight shift. For fast spins and jumps, 0.25x works best.</span></span>
+          <span><span class="ko">촬영 시간(3초~3분)은 한 번에 찍는 길이입니다. 발차기 한 동작이면 5~8초, 품새 한 장이면 15~30초, 품새 전체나 시범 연결 동작이면 2~3분처럼 연습 단위에 맞추세요. 대기 카운트(0~10초)는 촬영이 끝나고 화면 앞으로 걸어올 시간으로, 카메라와 거리가 멀수록 길게 잡으면 됩니다. 재생 속도(0.25~1배속)는 슬로우 정도입니다. 0.5배속이면 10초 영상이 20초 동안 나와 발끝·시선·중심 이동까지 하나하나 보이고, 회전이나 점프처럼 빠른 기술은 0.25배속이 좋습니다.</span><span class="en">Recording time (3s–3min) is the length of one take — match it to your practice unit: 5–8s for a single kick, 15–30s for a poomsae chapter, 2–3min for a full poomsae or demo sequence. Wait countdown (0–10s) is walking time from the camera spot to the screen; set it longer when the camera is far away. Playback speed (0.25–1x) controls the slow motion: at 0.5x a 10-second clip plays for 20 seconds — slow enough to check foot position, eye line and weight shift. For fast spins and jumps, 0.25x works best.</span></span>
         </div>
       </div>
       <div class="help-item">
@@ -1216,7 +1235,7 @@
         <div class="help-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="2" y="4" width="14" height="16" rx="2"/><rect x="18" y="4" width="4" height="16" rx="1"/></svg></div>
         <div class="help-body">
           <b><span class="ko">큰 화면 (왼쪽)</span><span class="en">Main screen (left)</span></b>
-          <span><span class="ko">지금 촬영 중인 모습, 또는 방금 찍은 동작의 슬로우 재생이 나옵니다. 슬로우 재생 중에는 좌하단 작은 창에 실시간 카메라("지금" 표시)가 함께 나와서, 화면 앞으로 걸어오는 자기 모습과 방금 동작을 동시에 볼 수 있습니다. 위쪽 뱃지에서 현재 상태와 남은 시간, 맨 위 진행 바(촬영은 빨강, 재생은 노랑)로 진행 정도가 보입니다.</span><span class="en">Shows the live camera while recording, or the slow replay of your last attempt. During the replay, a small window at the bottom left shows the live camera (marked LIVE), so you can watch yourself walking up while the replay plays. The badge on top shows the current phase and remaining time, and the bar at the very top shows progress (red = recording, yellow = replay).</span></span>
+          <span><span class="ko">지금 촬영 중인 모습, 또는 방금 찍은 동작의 슬로우 재생이 나옵니다. 슬로우 재생 중에는 좌하단 작은 창에 실시간 카메라("지금" 표시)가 함께 나와서, 화면 앞으로 걸어오는 자기 모습과 방금 동작을 동시에 볼 수 있습니다. 위쪽 뱃지에서 현재 상태와 남은 시간, 맨 위 진행 바(촬영은 빨강, 재생은 노랑)로 진행 정도가 보입니다. 재생 중에는 화면 아래 스크럽 바를 좌우로 끌어 방금 동작의 앞뒤 구간을 자유롭게 오가며 볼 수 있습니다.</span><span class="en">Shows the live camera while recording, or the slow replay of your last attempt. During the replay, a small window at the bottom left shows the live camera (marked LIVE), so you can watch yourself walking up while the replay plays. The badge on top shows the current phase and remaining time, and the bar at the very top shows progress (red = recording, yellow = replay). While a replay plays, drag the scrub bar at the bottom left or right to move freely back and forth through the take.</span></span>
         </div>
       </div>
       <div class="help-item">
@@ -1394,6 +1413,8 @@
   const KO = LANG !== 'en';
   const T = KO ? {
     sec: v => v + '초',
+    recFmt: v => v < 60 ? v + '초' : (v % 60 === 0 ? (v / 60) + '분' : Math.floor(v / 60) + '분 ' + (v % 60) + '초'),
+    remain: v => v < 60 ? v + '초' : Math.floor(v / 60) + ':' + String(v % 60).padStart(2, '0'),
     none: '없음',
     speedX: v => v + '배속',
     modeManual: '수동 (번호 버튼)', modeAuto: '자동 (1→4 순환)',
@@ -1426,6 +1447,8 @@
     langBtn: 'English'
   } : {
     sec: v => v + 's',
+    recFmt: v => v < 60 ? v + 's' : (v % 60 === 0 ? (v / 60) + 'min' : Math.floor(v / 60) + 'm ' + (v % 60) + 's'),
+    remain: v => v < 60 ? v + 's' : Math.floor(v / 60) + ':' + String(v % 60).padStart(2, '0'),
     none: 'None',
     speedX: v => v + 'x',
     modeManual: 'Manual (number buttons)', modeAuto: 'Auto (1→4 rotation)',
@@ -1464,6 +1487,11 @@
     2: { label: 'HD 720p',  w: 1280, h: 720,  cap: 960,  bps: 4_000_000 },
     3: { label: 'FHD 1080p', w: 1920, h: 1080, cap: 1280, bps: 8_000_000 }
   };
+  // 촬영 시간 단계: 3~30초는 1초 단위, 이후 40초·50초·1분·1분30초·2분·2분30초·3분
+  const REC_STOPS = [];
+  for (let t = 3; t <= 30; t++) REC_STOPS.push(t);
+  REC_STOPS.push(40, 50, 60, 90, 120, 150, 180);
+
   let quality = 2;
   let reopenNeeded = false;  // 화질 변경 시 다음 촬영 전에 카메라 재시작
 
@@ -1672,7 +1700,7 @@
     }
     sliders.forEach(s => s.addEventListener('input', () => update(+s.value)));
   }
-  bindSetting(['recSlider','recSlider2'], ['recVal','recVal2'], v => T.sec(v), v => recSec = v);
+  bindSetting(['recSlider','recSlider2'], ['recVal','recVal2'], v => T.recFmt(REC_STOPS[v]), v => recSec = REC_STOPS[v]);
   bindSetting(['waitSlider','waitSlider2'], ['waitVal','waitVal2'], v => v === 0 ? T.none : T.sec(v), v => waitSec = v);
   bindSetting(['speedSlider','speedSlider2'], ['speedVal','speedVal2'], v => T.speedX(v/100), v => {
     speed = v/100;
@@ -1909,7 +1937,7 @@
 
         drawLive();
         const remain = Math.ceil((durMs - elapsed) / 1000);
-        setPhaseUI('rec', remain + '초');
+        setPhaseUI('rec', T.remain(remain));
         setProgress(elapsed / durMs, true);
         requestAnimationFrame(loop);
       }
@@ -1956,18 +1984,65 @@
     playUrl = URL.createObjectURL(lastBlob);
     playVideo.src = playUrl;
     playVideo.playbackRate = speed;
+
+    // 스크럽 시킹을 위한 준비: 메타데이터 로드 + webm 길이 미기록(Infinity) 보정
+    await new Promise(r => {
+      if (playVideo.readyState >= 1) r();
+      else { playVideo.onloadedmetadata = () => r(); setTimeout(r, 1000); }
+    });
+    if (!isFinite(playVideo.duration)) {
+      await new Promise(r => {
+        const t = setTimeout(r, 1000);
+        playVideo.ontimeupdate = () => {
+          playVideo.ontimeupdate = null;
+          clearTimeout(t);
+          playVideo.currentTime = 0;
+          r();
+        };
+        playVideo.currentTime = 1e9;
+      });
+    }
+
     try { await playVideo.play(); } catch (e) { return; }
 
     const playDurMs = lastDurMs / speed;        // 실제 촬영 길이 기준
     let elapsed = 0, prev = performance.now();
 
+    // ---- 스크럽: 좌우로 끌어 재생 위치 앞뒤 이동 ----
+    const scrub = $('scrub');
+    const vidDur = isFinite(playVideo.duration) ? playVideo.duration : lastDurMs / 1000;
+    let scrubbing = false;
+    scrub.value = 0;
+    $('scrubBar').classList.add('on');
+
     return new Promise(resolve => {
-      function finish() { playVideo.pause(); $('nextPrep').classList.remove('on'); resolve(); }
+      scrub.oninput = () => {
+        scrubbing = true;
+        playVideo.pause();
+        const ratio = scrub.value / 1000;
+        try { playVideo.currentTime = ratio * vidDur; } catch (e) {}
+        elapsed = ratio * playDurMs;
+      };
+      const endScrub = () => {
+        if (!scrubbing) return;
+        scrubbing = false;
+        if (!paused && phase === 'play') playVideo.play().catch(() => {});
+      };
+      scrub.onpointerup = endScrub;
+      scrub.onpointercancel = endScrub;
+
+      function finish() {
+        playVideo.pause();
+        $('nextPrep').classList.remove('on');
+        $('scrubBar').classList.remove('on');
+        resolve();
+      }
       function loop(now) {
         if (!running) return finish();
         if (paused) { prev = now; requestAnimationFrame(loop); return; }
-        elapsed += now - prev; prev = now;
-        if (elapsed >= playDurMs || skipRequested || playVideo.ended) return finish();
+        if (scrubbing) { prev = now; }
+        else { elapsed += now - prev; prev = now; }
+        if (!scrubbing && (elapsed >= playDurMs || skipRequested || playVideo.ended)) return finish();
 
         if (playVideo.readyState >= 2) {
           const { H, mainW } = layout();
@@ -1978,12 +2053,13 @@
         }
         const remainMs = playDurMs - elapsed;
         const remain = Math.ceil(remainMs / 1000);
-        setPhaseUI('play', remain + '초');
+        setPhaseUI('play', T.remain(remain));
         if (remainMs <= 5000) {
           $('nextPrep').classList.add('on');
           $('npNum').textContent = remain;
         }
         setProgress(elapsed / playDurMs, false);
+        if (!scrubbing) scrub.value = Math.round(elapsed / playDurMs * 1000);
         requestAnimationFrame(loop);
       }
       requestAnimationFrame(loop);
@@ -2239,7 +2315,7 @@
     try { localStorage.setItem('rm-lang', KO ? 'en' : 'ko'); } catch (e) {}
     location.reload();
   });
-  $('recVal').textContent = $('recVal2').textContent = T.sec(recSec);
+  $('recVal').textContent = $('recVal2').textContent = T.recFmt(recSec);
   $('waitVal').textContent = $('waitVal2').textContent = waitSec === 0 ? T.none : T.sec(waitSec);
   $('speedVal').textContent = $('speedVal2').textContent = T.speedX(speed);
   $('modeVal').textContent = $('modeVal2').textContent = assignMode === 1 ? T.modeManual : T.modeAuto;
